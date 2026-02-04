@@ -1,0 +1,459 @@
+config:
+  filename: index.md
+  meta:
+    title: 站域文路指引
+    description: 一方数字栖居，聚万象为舟楫，渡日常于须臾。
+
+nav:
+  - category: AI 大模型
+    icon: material/robot
+    items:
+      - name: Qwen Chat
+        url: https://chat.qwen.ai
+        description: 阿里通义千问大模型
+      - name: 谷歌 Gemini
+        url: https://gemini.google.com
+        description: 谷歌官方 AI 对话助手
+        icon: https://api.iconify.design/vscode-icons:file-type-gemini.svg
+      - name: 谷歌 AI Studio
+        url: https://aistudio.google.com
+        description: Google AI 开发者平台
+      - name: ChatGPT
+        url: https://chatgpt.com
+        description: OpenAI 旗下的 AI 助手
+        icon: https://api.iconify.design/logos:openai-icon.svg
+      - name: Claude
+        url: https://claude.ai
+        description: Anthropic 旗下的 AI 助手
+        icon: https://cdn.simpleicons.org/claude
+      - name: 智谱清言
+        url: https://chatglm.cn
+        description: 智谱 AI 旗下大模型
+      - name: DeepSeek
+        url: https://www.deepseek.com
+        description: 深度求索 AI 智能助手
+        icon: https://api.iconify.design/ri:deepseek-fill.svg?color=%231E90FF
+      - name: 豆包
+        url: https://www.doubao.com/chat
+        description: 字节跳动旗下 AI 助手
+      - name: 腾讯元宝
+        url: https://yuanbao.tencent.com
+        description: 腾讯旗下 AI 智能助手
+      - name: 欧亿Ai-7.0
+        url: https://ai.rcouyi.com/home
+        description: 多模型聚合 AI 平台
+      - name: SiliconCloud
+        url: https://cloud.siliconflow.cn
+        description: 硅基流动 AI 模型服务
+      - name: Coze 扣子
+        url: https://www.coze.cn
+        description: 字节跳动 AI Bot 开发平台
+
+  - category: 创作者工具
+    icon: material/tools
+    items:
+      - name: 嘉立创 EDA 编辑器
+        url: https://pro.lceda.cn/editor
+        description: 在线 PCB 设计工具
+      - name: Nuitka Commander
+        url: https://nuitka-commander.erduotong.com
+        description: Python 打包工具辅助助手
+        icon: https://raw.githubusercontent.com/Nuitka/Nuitka/main/doc/Logo/Nuitka-Logo-Symbol.svg
+
+  - category: 嵌入式开发
+    icon: material/chip
+    items:
+      - name: STMCU 中文官网
+        url: https://www.stmcu.com.cn
+        description: ST 官方中文技术资源库
+        icon: https://cdn.simpleicons.org/stmicroelectronics
+      - name: ST Community
+        url: https://community.st.com
+        description: ST 全球官方开发者社区
+      - name: 硬汉嵌入式论坛
+        url: https://forum.anfulai.cn
+        description: 安富莱嵌入式技术社区
+      - name: 立创开源硬件平台
+        url: https://oshwhub.com
+        description: 电子工程师的开源社区
+      - name: 芯查查
+        url: https://www.xcc.com
+        description: 电子信息产业数据搜索引擎
+      - name: CircuitsToday
+        url: https://www.circuitstoday.com
+        description: 电子电路设计与原理资源
+      - name: 波特律动
+        url: https://docs.baud-dance.com/docs/stm32/getting-started/
+        description: STM32 入门与开发文档
+      - name: OpenMV 中文教程
+        url: https://book.openmv.cc/quick-starter.html
+        description: 机器视觉模块入门教程
+      - name: 嵌入式仿真实验平台
+        url: https://app.puliedu.com/#/portals
+        description: 在线嵌入式仿真教学
+      - name: MicroPython 中文文档
+        url: http://micropython.86x.net/en/latet/library/index.html
+        description: MicroPython 官方中文文档
+        icon: https://cdn.simpleicons.org/micropython
+      - name: IT项目网
+        url: https://www.itprojects.cn
+        description: 配套软硬件项目及通俗教程
+      - name: 太极创客
+        url: http://www.taichi-maker.com
+        description: Arduino 及物联网学习资料
+      - name: 立创开发板技术文档
+        url: https://wiki.lckfb.com/zh-hans/
+        description: 立创开发板文档中心
+      - name: USB 中文网
+        url: https://www.usbzh.com
+        description: USB 协议开发技术分享
+      - name: Luat 社区
+        url: https://doc.openluat.com/wiki/21
+        description: 合宙物联技术文档
+      - name: 海思技术论坛
+        url: https://developers.hisilicon.com/forum/all
+        description: 海思开发者交流平台
+      - name: Tinkercad
+        url: https://www.tinkercad.com
+        description: Tinkercad 在线设计与仿真
+      - name: Wokwi
+        url: https://wokwi.com
+        description: 在线 ESP32/Arduino 模拟器
+        icon: https://docs.wokwi.com/img/logo.svg
+      - name: 嘉立创 EDA 指南
+        url: https://prodocs.lceda.cn/cn/
+        description: 嘉立创 EDA 专业版用户手册
+      - name: 嘉立创客户中心
+        url: https://member.jlc.com
+        description: 嘉立创下单与订单管理
+      - name: SimpleFOC 中文站
+        url: https://simplefoc.cn/#
+        description: 开源电机控制库中文文档
+
+  - category: 考研与校务
+    icon: material/school
+    items:
+      - name: 实习实训管理平台
+        url: https://admin.intern.ruilisi.com/welcome
+        description: 过程化实习管理系统
+      - name: 毕业设计管理
+        url: https://projex.lun51.vip/login?tenantId=JWC.SZCU
+        description: 毕业设计流程管理系统
+      - name: 苏州城市学院
+        url: https://www.szcu.edu.cn
+        description: 学校官方网站
+      - name: 研可岸择校
+        url: https://www.kaoyansou.cn/f/sc/index.html#/school
+        description: 考研择校信息查询
+      - name: 中国研究生招生信息网
+        url: https://yz.chsi.com.cn
+        description: 考研报名官方平台（研招网）
+      - name: 真题墙
+        url: https://zhentiqiang.com
+        description: 考研数学历年考试真题资源
+      - name: 江苏本科教学信息平台
+        url: https://jsgjc.jsed.edu.cn
+        description: 江苏省教学信息官方平台
+
+  - category: 编程与开发
+    icon: material/code-tags
+    items:
+      - name: 菜鸟教程
+        url: https://www.runoob.com
+        description: 基础编程技术学习
+      - name: 菜鸟工具
+        url: https://www.jyshare.com
+        description: 程序员在线工具箱
+      - name: LeetCode
+        url: https://leetcode.cn
+        description: 编程题库与刷题平台
+        icon: https://api.iconify.design/devicon:leetcode.svg
+      - name: freeCodeCamp
+        url: https://www.freecodecamp.org/chinese/
+        description: 免费学习编程的社区
+        icon: https://cdn.simpleicons.org/freecodecamp
+      - name: CSDN
+        url: https://www.csdn.net
+        description: 专业开发者社区
+        icon: https://csdnimg.cn/public/favicon.ico
+      - name: Qt Documentation
+        url: https://doc.qt.io
+        description: Qt 框架官方文档
+        icon: https://cdn.simpleicons.org/qt
+      - name: uv
+        url: https://docs.astral.sh/uv
+        description: 极快的 Python 包管理工具
+        icon: https://cdn.simpleicons.org/uv
+      - name: PTA
+        url: https://pintia.cn/problem-sets/dashboard
+        description: 程序设计类实验辅助教学平台
+      - name: 映数-仿真首页
+        url: https://www.yssim.cn/F_Home/HomeList
+        description: 工业仿真与数字孪生平台
+
+  - category: Web 前端开发
+    icon: material/web
+    items:
+      - name: Zensical
+        url: https://zensical.org
+        description: 现代化的文档网站构建工具
+      - name: Vitepress
+        url: https://vitepress.vuejs.org/zh
+        description: 由 Vite 和 Vue 驱动的静态网站生成器
+        icon: https://cdn.simpleicons.org/vitepress
+      - name: CodePen
+        url: https://codepen.io
+        description: 在线前端代码编辑与展示平台
+        icon: https://api.iconify.design/logos:codepen-icon.svg
+      - name: Mizuki
+        url: https://docs.mizuki.mysqil.com
+        description: 一个简约 & 功能丰富的 Astro 博客主题
+      - name: Firefly
+        url: https://docs-firefly.cuteleaf.cn
+        description: 一款基于 Astro 框架和 Fuwari 模板的现代化博客主题
+
+  - category: 云服务与托管
+    icon: material/cloud
+    items:
+      - name: Vercel
+        url: https://vercel.com
+        description: 现代化的前端托管平台
+        icon: https://cdn.simpleicons.org/vercel
+      - name: Netlify
+        url: https://app.netlify.com
+        description: 静态网站自动化部署平台
+        icon: https://cdn.simpleicons.org/netlify
+      - name: Tencent EdgeOne
+        url: https://console.cloud.tencent.com/edgeone/pages
+        description: 腾讯云边缘计算托管平台
+      - name: Cloudflare
+        url: https://www.cloudflare.com
+        description: 全球领先的 CDN 与云服务商
+        icon: https://cdn.simpleicons.org/cloudflare
+      - name: Github
+        url: https://github.com
+        description: 全球最大开源代码托管平台
+        icon: https://api.iconify.design/logos:github-icon.svg
+      - name: 阿里云
+        url: https://www.aliyun.com
+        description: 全球领先的云计算服务商
+      - name: 腾讯云
+        url: https://cloud.tencent.com
+        description: 腾讯云计算服务平台
+      - name: 华为云
+        url: https://www.huaweicloud.com
+        description: 行业领先的云服务商
+        icon: https://cdn.simpleicons.org/huawei
+      - name: Umami Cloud
+        url: https://cloud.umami.is/login
+        description: 隐私优先的网站流量统计
+        icon: https://cdn.simpleicons.org/umami
+      - name: 软柠存储
+        url: https://bucket.rutno.com
+        description: 个人对象存储工具
+      - name: 聚合图床
+        url: https://www.superbed.cn
+        description: 专业图片托管服务
+
+  - category: 图标与 UI 素材
+    icon: material/vector-square
+    items:
+      - name: Iconify
+        url: https://icon-sets.iconify.design
+        description: 开源图标库集合
+        icon: https://cdn.simpleicons.org/iconify
+      - name: Lucide
+        url: https://lucide.dev
+        description: 简洁优雅的开源图标库
+        icon: https://cdn.simpleicons.org/lucide
+      - name: Material Design Icons
+        url: https://pictogrammers.com/library/mdi
+        description: Material Design Icons 图标库
+        icon: https://cdn.simpleicons.org/materialdesign
+      - name: FontAwesome Icons
+        url: https://fontawesome.com/search?m=free
+        description: FontAwesome 免费图标库
+        icon: https://cdn.simpleicons.org/fontawesome
+      - name: Octicons Icon Library
+        url: https://octicons.github.com
+        description: GitHub 官方图标库
+        icon: https://cdn.simpleicons.org/github
+      - name: Simple Icons
+        url: https://simpleicons.org
+        description: 常用品牌图标集合
+        icon: https://cdn.simpleicons.org/simpleicons
+      - name: Yesicon
+        url: https://yesicon.app
+        description: 精选高品质矢量图标
+      - name: Freepik
+        url: https://www.freepik.com/icons
+        description: 免费 PNG/SVG 图标下载
+        icon: https://cdn.simpleicons.org/freepik
+      - name: Flaticon
+        url: https://www.flaticon.com
+        description: 海量矢量图标库
+      - name: IconScout
+        url: https://iconscout.com
+        description: 优质 3D 插画与图标
+      - name: Uiverse
+        url: https://uiverse.io
+        description: 开源 UI 元素库
+
+  - category: 微信开发生态
+    icon: material/wechat
+    items:
+      - name: 微信开放平台
+        url: https://open.weixin.qq.com
+        description: 接入微信账号体系与能力
+        icon: https://api.iconify.design/logos:open-graph.svg
+      - name: 微信开放社区
+        url: https://developers.weixin.qq.com/community/homepage
+        description: 官方开发者问答与交流社区
+      - name: 微信开发文档
+        url: https://developers.weixin.qq.com/doc/
+        description: 小程序、公众号开发官方文档
+        icon: https://api.iconify.design/material-icon-theme:folder-docs.svg
+      - name: 微信公众平台
+        url: https://mp.weixin.qq.com
+        description: 公众号与小程序管理后台
+        icon: https://cdn.simpleicons.org/wechat
+      - name: 秀米编辑器
+        url: https://xiumi.us/#
+        description: 微信公众号图文排版
+
+  - category: 文档写作工具
+    icon: material/file-document-edit
+    items:
+      - name: 语雀
+        url: https://www.yuque.com
+        description: 专业文档与知识库工具
+      - name: MinerU
+        url: https://mineru.net/OpenSourceTools/Extractor
+        description: 全能文档解析神器
+      - name: Doocs Markdown
+        url: https://md.doocs.org
+        description: 微信 Markdown 编辑器
+      - name: Mermaid Live
+        url: https://mermaid.live
+        description: 在线流程图代码绘制
+        icon: https://cdn.simpleicons.org/mermaid
+      - name: NotebookLM
+        url: https://notebooklm.google.com/?pli=1
+        description: 谷歌 AI 文档助手
+        icon: https://api.iconify.design/logos:google-icon.svg
+      - name: 中国版权登记平台
+        url: https://register.ccopyright.com.cn/registration.html#/index
+        description: 官方作品著作权登记
+
+  - category: 社交娱乐媒体
+    icon: material/share-variant
+    items:
+      - name: Bilibili
+        url: https://www.bilibili.com
+        description: 中国知名视频弹幕网站
+        icon: https://cdn.simpleicons.org/bilibili
+      - name: Telegram
+        url: https://web.telegram.org/a
+        description: 即时通讯平台
+        icon: https://api.iconify.design/logos:telegram.svg
+      - name: Discord
+        url: https://discord.com/channels/@me
+        description: 游戏与开发者社区
+        icon: https://cdn.simpleicons.org/discord
+      - name: YouTube
+        url: https://www.youtube.com
+        description: 全球视频分享平台
+        icon: https://api.iconify.design/logos:youtube-icon.svg
+      - name: 小红书
+        url: https://www.xiaohongshu.com/explore
+        description: 生活兴趣社区
+        icon: https://cdn.simpleicons.org/xiaohongshu
+
+  - category: 实用站点导航
+    icon: material/toolbox
+    items:
+      - name: Greasy Fork
+        url: https://greasyfork.org/zh-CN
+        description: 安全且实用的用户脚本站
+        icon: https://cdn.simpleicons.org/greasyfork
+      - name: Canva 可画
+        url: https://www.canva.cn
+        description: 在线设计排版平台
+        icon: https://static.canva.cn/static/images/favicon.ico
+      - name: Photopea
+        url: https://www.photopea.com
+        description: 在线网页版 Photoshop
+      - name: Cover Master
+        url: https://cover.iwhy.dev
+        description: 封面图制作工具
+      - name: Neat Reader
+        url: https://www.neat-reader.cn/webapp#
+        description: 在线 ePub 阅读器
+      - name: 有道翻译
+        url: https://fanyi.youdao.com/#/AITranslate
+        description: 文本及网页在线翻译
+      - name: 网易云音乐解析
+        url: https://www.kanxizai.cn/163_music/
+        description: 高品质音乐下载工具
+      - name: 鸠摩搜索
+        url: https://www.jiumodiary.com
+        description: 文档搜索引擎
+      - name: LKs 网站推荐
+        url: https://lkssite.vip
+        description: 优质资源网站合集
+      - name: Thingiverse
+        url: https://www.thingiverse.com
+        description: 3D 打印物理模型站
+        icon: https://cdn.simpleicons.org/thingiverse
+      - name: 双拼练习
+        url: https://api.ihint.me/shuang/
+        description: 在线双拼输入法练习
+        icon: https://api.iconify.design/streamline-plump-color:keyboard.svg
+      - name: Typing Tom
+        url: https://www.typingtom.com
+        description: 免费在线盲打练习
+      - name: YYSSR 机场
+        url: https://yyssr.org
+        description: 稳定高速的网络加速
+      - name: 一元机场
+        url: https://cloud.xn--4gq62f52gdss.asia/#/login
+        description: 网络加速服务
+      - name: 虚拟资料生成器
+        url: https://www.usernamecopy.com
+        description: 测试用身份信息生成
+
+  - category: 自部署站点群
+    icon: material/server
+    items:
+      - name: Suffine Hub
+        url: https://sufine.top
+        description: Luwei 的个人博客站点
+        icon: https://pic1.imgdb.cn/item/6983322d02c0a8411ebd31d4.png
+      - name: 博客站点流量监控
+        url: https://eocount.9420000.xyz
+        description: 博客站点访问量数据监控
+        icon: https://api.iconify.design/glyphs-poly:chart-line.svg
+      - name: Luwei's Note Book
+        url: https://note.sufine.top
+        description: Luwei 的个人知识笔记库
+        icon: https://api.iconify.design/noto-v1:notebook.svg
+      - name: Mazanoke
+        url: https://pix.sufine.top
+        description: 在线图片压缩与转换工具
+        icon: https://api.iconify.design/flat-color-icons:edit-image.svg
+      - name: 单词学习网站
+        url: https://word.sufine.top
+        description: 英语单词记忆与测试
+        icon: https://api.iconify.design/material-symbols:match-word-rounded.svg?color=%232B579A
+      - name: 交叉口信号参数计算器
+        url: https://sign.sufine.top
+        description: 交叉口交通信号参数在线计算
+        icon: https://api.iconify.design/noto-v1:horizontal-traffic-light.svg
+      - name: Sufine TV 影视站
+        url: https://tv.sufine.top
+        description: 基于 MoonTV 的资源聚合平台
+        icon: https://api.iconify.design/streamline-stickies-color:smart-tv.svg
+      - name: Kira AI Chat
+        url: https://ai.sufine.top
+        description: 基于硅基流动的 AI 对话平台
+        icon: https://api.iconify.design/streamline-flex-color:cat-2.svg
