@@ -30,7 +30,7 @@ jobs:
       # 3. 安装依赖并构建
       - name: Install and Build
         run: |
-          pip install mkdocs-materialx
+          pip install mkdocs-materialx beautifulsoup4 requests PyYAML
           mkdocs build --clean
 
       # 4. 部署 'site' 文件夹到 'deploy' 分支
