@@ -20,8 +20,10 @@ class Colors:
 CUSTOM_CSS = """
 <style>
 /* Adjust the sidebar width and content gap if needed */
-:root {
-    --md-sidebar-primary-width: 10.5rem; /* default 12.1rem */
+@media screen and (min-width: 76.25em) {
+    :root {
+        --md-sidebar-primary-width: 10.5rem; /* default 12.1rem */
+    }
 }
 
 /* Balance the visual center of gravity (Desktop, Expanded Sidebar Only) */
@@ -274,6 +276,26 @@ html body .md-sidebar .md-nav__link--active:not([href^="#"]) {
 .nav-search-btn svg {
     width: 24px;
     height: 24px;
+}
+
+/* Mobile Sidebar Customization */
+@media screen and (max-width: 76.1875em) {
+    /* Title Font and Spacing */
+    html .md-sidebar .md-nav__link {
+        font-size: 0.85rem !important; /* Reduced from .9rem (Desktop) */
+        line-height: 1.6 !important;    /* Reduced from 1.8 (Desktop) */
+    }
+
+    /* Icon Size Representation */
+    .md-nav__link .nav-icon-wrapper svg {
+        width: 1.1em !important; /* Match desktop relative size */
+        height: 1.1em !important;
+    }
+
+    /* Increase spacing between icon and text */
+    .md-nav__link .nav-icon-wrapper {
+        margin-right: 0.4em !important; /* Increased from 0.2em (Desktop) */
+    }
 }
 </style>
 """
