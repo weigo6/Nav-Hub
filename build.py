@@ -250,7 +250,7 @@ html body .md-sidebar .md-nav__link--active:not([href^="#"]) {
     border: none;
     height: 48px;
     padding: 0 1rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
     background: transparent;
     color: var(--md-default-fg-color);
     outline: none;
@@ -371,7 +371,10 @@ SEARCH_HTML = """
             <option value="local">站内</option>
             <option value="google">Google</option>
             <option value="bing">Bing</option>
+            <option value="github">Github</option>
             <option value="baidu">百度</option>
+            <option value="bilibili">Bilibili</option>
+            <option value="zhihu">知乎</option>
         </select>
         <input type="text" id="nav-search-input" class="nav-search-input" placeholder="搜索资源..." autocomplete="off">
         <button id="nav-search-btn" class="nav-search-btn">
@@ -401,7 +404,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'local': '搜索资源...',
         'google': 'Google 搜索...',
         'bing': 'Bing 搜索...',
-        'baidu': '百度搜索...'
+        'github': 'Github 搜索...',
+        'baidu': '百度搜索...',
+        'bilibili': 'Bilibili 搜索...',
+        'zhihu': '知乎搜索...'
     };
 
     function performSearch() {
@@ -453,7 +459,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let url = '';
             if (engine === 'google') url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
             if (engine === 'bing') url = 'https://www.bing.com/search?q=' + encodeURIComponent(query);
+            if (engine === 'github') url = 'https://github.com/search?q=' + encodeURIComponent(query);
             if (engine === 'baidu') url = 'https://www.baidu.com/s?wd=' + encodeURIComponent(query);
+            if (engine === 'bilibili') url = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(query);
+            if (engine === 'zhihu') url = 'https://www.zhihu.com/search?type=content&q=' + encodeURIComponent(query);
             if (url) window.open(url, '_blank');
         }
     }

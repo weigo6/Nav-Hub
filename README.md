@@ -36,11 +36,14 @@
 
 ### 1. 安装依赖
 
-确保已安装 MkDocs Material：
+确保已安装 MkDocs-MaterialX （或者选择安装 Mkdocs-material）及相关项目依赖：
 
 ```bash
-pip install mkdocs-material
-# 或 pip install mkdocs-materialx
+pip install mkdocs-materialx
+# 或 pip install mkdocs-material
+
+# 安装项目运行所需的依赖
+pip install beautifulsoup4 requests PyYAML
 ```
 
 ### 2. 配置文件 (`nav_data.yml`)
@@ -84,7 +87,7 @@ hooks:
 
 # 2. 主题配置
 theme:
-  name: material # 或 materialx
+  name: materialx # 或 material
   features:
     - navigation.top # 推荐开启返回顶部按钮
     - toc.integrate  # 集成目录功能必须开启！
