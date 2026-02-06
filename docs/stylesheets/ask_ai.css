@@ -66,7 +66,7 @@
 
 /* Header - Clean Style */
 .ask-ai-header {
-    padding: 10px 20px;
+    padding: 10px 12px 10px 18px;
     /* Remove accent background, use default */
     background-color: var(--md-default-bg-color); 
     color: var(--md-default-fg-color);
@@ -159,7 +159,7 @@
     max-width: 88%;
     padding: 12px 16px;
     border-radius: 16px;
-    line-height: 1.6;
+    line-height: 1.5;
     font-size: 16px;
     word-wrap: break-word;
 }
