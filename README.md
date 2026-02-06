@@ -124,6 +124,59 @@ mkdocs build
     - 展开状态图标: `material/menu-open`
     - 收起状态图标: `material/menu-close`
 - **默认状态**: 可在 `nav_data.yml` 中通过 `config.sidebar_collapsed` 设置初始状态。
+- **智能避让**: `extra.js` 脚本实现了悬浮按钮（侧边栏切换、ASK AI）在滚动到底部时自动避让页脚的功能，防止内容被遮挡。
+
+## ASK AI 功能部署
+
+本项目内置了基于 Cloudflare Workers 和 SiliconFlow (硅基流动) 的 AI 问答助手功能。
+
+### 1. 部署后端 (Cloudflare Worker)
+
+后端采用 Cloudflare Worker 转发请求，隐藏 API Key 并处理跨域问题。
+
+1.  登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)。
+2.  进入 **Workers & Pages** -> **Create Application** -> **Create Worker**。
+3.  命名您的 Worker (例如 `nav-hub-ai`) 并点击 **Deploy**。
+4.  点击 **Edit code**，将项目根目录下的 `ai-worker.js` 内容完整复制并覆盖默认代码。
+5.  保存并部署。
+6.  返回 Worker 详情页，进入 **Settings** -> **Variables and Secrets**。
+7.  添加变量：
+    -   **Variable name**: `SILICONFLOW_API_KEY`
+    -   **Value**: 您的 SiliconFlow API Key (以 `sk-` 开头)
+    -   点击 **Encrypt** 加密存储。
+8.  记录下您的 Worker URL (例如 `https://nav-hub-ai.username.workers.dev`)。
+
+### 2. 引入资源 (mkdocs.yml)
+
+确保您的 `mkdocs.yml` 文件中正确引入了必要的样式和脚本：
+
+```yaml
+extra_css:
+  - stylesheets/ask_ai.css # ASK AI 样式
+  # - stylesheets/extra.css # (可选) 其他样式
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/marked/marked.min.js # 用于 Markdown 渲染
+  - javascripts/ask_ai.js # ASK AI 核心逻辑
+  - javascripts/extra.js # 界面交互优化（如按钮避让页脚）
+```
+
+### 3. 配置前端 (ask_ai.js)
+
+1.  打开 `docs/javascripts/ask_ai.js` 文件。
+2.  找到文件顶部的配置项：
+    ```javascript
+    // Cloudflare Worker URL
+    const WORKER_URL = "https://your-worker-url.workers.dev"; 
+    ```
+3.  将 `WORKER_URL` 的值替换为您在第一步中获取的 Worker URL。
+4.  保存文件。
+
+### 4. 验证
+
+重新运行 `mkdocs serve` 或 `mkdocs build`，在站点右下角应出现 ASK AI 的悬浮按钮。点击即可开始对话。
+
+> **注意**: 默认模型配置为 `deepseek-ai/DeepSeek-V3`，您可以在 `ai-worker.js` 中修改 `MODEL_NAME` 变量来切换其他模型。
 
 ## 图标获取机制
 
@@ -187,7 +240,7 @@ mkdocs build
 
 ## 开发规划
 
-- [ ] 支持 Github 站点搜索功能
+- [x] 支持 Github 站点搜索功能
 - [ ] 增加多线程并发处理机制，以加快构建速度
 
 ## 许可证

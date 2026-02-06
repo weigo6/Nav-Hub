@@ -247,6 +247,7 @@ html body .md-sidebar .md-nav__link--active:not([href^="#"]) {
 
 .nav-search-input {
     flex-grow: 1;
+    min-width: 0;
     border: none;
     height: 48px;
     padding: 0 1rem;
@@ -257,6 +258,7 @@ html body .md-sidebar .md-nav__link--active:not([href^="#"]) {
 }
 
 .nav-search-btn {
+    flex-shrink: 0;
     border: none;
     background: transparent;
     width: 48px;
@@ -307,7 +309,7 @@ TOGGLE_CSS = """
     position: fixed;
     bottom: 20px;
     left: 20px;
-    z-index: 100;
+    z-index: 2;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -321,6 +323,11 @@ TOGGLE_CSS = """
     justify-content: center;
     transition: all 0.3s;
     opacity: 0.6;
+}
+
+#sidebar-toggle svg {
+    width: 22px;
+    height: 22px;
 }
 
 #sidebar-toggle:hover {

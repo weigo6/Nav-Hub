@@ -8,7 +8,13 @@ hooks:
   - hooks.py
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.css # 其他自定义样式
+  - stylesheets/ask_ai.css # 自定义的 Ask AI 功能样式
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/marked/marked.min.js # 用于 Markdown 渲染
+  - javascripts/ask_ai.js # 自定义的 Ask AI 功能脚本
+  - javascripts/extra.js # 其他自定义脚本
 
 theme:
   name: materialx
