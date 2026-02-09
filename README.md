@@ -178,6 +178,58 @@ extra_javascript:
 
 > **注意**: 默认模型配置为 `deepseek-ai/DeepSeek-V3`，您可以在 `ai-worker.js` 中修改 `MODEL_NAME` 变量来切换其他模型。
 
+## 音乐播放器功能部署
+
+本项目集成了一个轻量级的悬浮音乐播放器，基于 [APlayer](https://github.com/DIYgod/APlayer) 和 [MetingJS](https://github.com/metowolf/MetingJS) 实现，支持网易云音乐、QQ音乐等多种平台的歌单播放。
+
+### 1. 功能特点
+
+- **多平台支持**: 支持网易云、QQ音乐、酷狗等多家音乐平台。
+- **极简设计**: 默认显示为悬浮按钮，点击即可展开/折叠播放器，不占用页面空间。
+- **自动吸附**: 播放器界面自动吸附在页面左下角（可通过 CSS 调整）。
+
+### 2. 引入资源 (`mkdocs.yml`)
+
+在 `mkdocs.yml` 中引入必要的 CSS 和 JS 文件：
+
+```yaml
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css
+  - stylesheets/music_player.css # 自定义播放器样式
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js
+  - https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js
+  - javascripts/music_player.js # 播放器初始化脚本
+  - javascripts/extra.js # 界面交互优化（如音乐播放器可见性与位置逻辑）
+```
+
+### 3. 配置播放列表 (`music_player.js`)
+
+打开 `docs/javascripts/music_player.js`，找到 `createMusicUI` 函数，修改 `meting-js` 元素的属性来自定义您的歌单：
+
+```javascript
+    const metingElement = document.createElement("meting-js");
+    metingElement.setAttribute("server", "netease");      // 音乐平台: netease, tencent, kugou, xiami, baidu
+    metingElement.setAttribute("type", "playlist");       // 类型: song, playlist, album, search, artist
+    metingElement.setAttribute("id", "17741904561");      // 资源 ID (如歌单ID)
+    metingElement.setAttribute("fixed", "false");         // ！吸底模式必须设置成false，否则自定义样式将失效
+    metingElement.setAttribute("mini", "false");          // ！迷你模式必须设置成false，否则自定义样式将失效
+    metingElement.setAttribute("autoplay", "false");      // 是否自动播放
+    metingElement.setAttribute("theme", "#2980b9");       // 主题颜色
+```
+
+**常用配置项说明**：
+
+| 属性 | 描述 | 示例值 |
+| :--- | :--- | :--- |
+| **server** | 音乐平台 | `netease` (网易云), `tencent` (QQ音乐) |
+| **type** | 资源类型 | `playlist` (歌单), `song` (单曲) |
+| **id** | 资源 ID | 对应平台链接中的数字 ID |
+| **theme** | 主题颜色 | `#2980b9` |
+
+> **提示**: 导航站默认为单页面站点，如果您配置了多页面，希望切换页面时音乐不中断，需要在 `mkdocs.yml` 中开启 `navigation.instant` 特性。
+
 ## 图标获取机制
 
 项目采用了一套 **3+3 多重保障** 的图标获取与显示策略，最大程度确保图标的正确显示与访问隐私。
