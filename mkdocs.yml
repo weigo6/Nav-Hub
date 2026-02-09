@@ -10,14 +10,14 @@ hooks:
 extra_css:
   - stylesheets/extra.css # 其他自定义样式
   - stylesheets/ask_ai.css # 自定义的 Ask AI 功能样式
-  - https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css # Aplayer 样式表
+  - stylesheets/APlayer.min.css # Aplayer 样式表
   - stylesheets/music_player.css # 音乐播放器样式表
 
 extra_javascript:
-  - https://cdn.jsdelivr.net/npm/marked/marked.min.js # 用于 Markdown 渲染
+  - javascripts/marked.min.js # 用于 Markdown 渲染
   - javascripts/ask_ai.js # 自定义的 Ask AI 功能脚本
-  - https://registry.npmmirror.com/aplayer/1.10.1/files/dist/APlayer.min.js # Aplayer 脚本
-  - https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js # MetingJS 脚本
+  - javascripts/APlayer.min.js # Aplayer 脚本
+  - javascripts/Meting.min.js # MetingJS 脚本
   - javascripts/music_player.js # 音乐播放器脚本
   - javascripts/extra.js # 其他自定义脚本
 

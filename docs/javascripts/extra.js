@@ -3,18 +3,18 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // 1. 按钮避让页脚逻辑 (Footer Avoidance Logic)
     function updateFooterAvoidance() {
+        // 获取所有元素
+        const askAiToggle = document.getElementById("ask-ai-toggle");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        const musicToggle = document.getElementById("music-player-toggle");
+        const musicContainer = document.getElementById("music-player-container");
+        
+        // 宽度 <= 720px 时，不避让页脚，且恢复默认位置
         if (window.innerWidth <= 720) {
-            // 如果屏幕变窄，清除 JS 设置的 bottom 样式，恢复 CSS 默认值
-            const elements = [
-                document.getElementById("ask-ai-toggle"),
-                document.getElementById("sidebar-toggle"),
-                document.getElementById("music-player-toggle"),
-                document.getElementById("music-player-container")
-            ];
-            
-            elements.forEach(el => {
-                if (el) el.style.bottom = "";
-            });
+            if (askAiToggle) askAiToggle.style.bottom = ''; // Revert to CSS default
+            if (sidebarToggle) sidebarToggle.style.bottom = ''; // Revert to CSS default
+            if (musicToggle) musicToggle.style.bottom = ''; // Revert to CSS default
+            if (musicContainer) musicContainer.style.bottom = ''; // Revert to CSS default
             return;
         }
 
@@ -34,25 +34,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // 更新 Ask AI 按钮位置
-        const askAiToggle = document.getElementById("ask-ai-toggle");
         if (askAiToggle) {
             askAiToggle.style.bottom = `${baseBottom + offset}px`;
         }
 
         // 更新 侧边栏切换按钮位置
-        const sidebarToggle = document.getElementById("sidebar-toggle");
         if (sidebarToggle) {
             sidebarToggle.style.bottom = `${baseBottom + offset}px`;
         }
         
         // 更新音乐播放器按钮位置 (位于 Ask AI 上方 52px)
-        const musicToggle = document.getElementById("music-player-toggle");
         if (musicToggle) {
             musicToggle.style.bottom = `${baseBottom + 52 + offset}px`;
         }
         
         // 更新音乐播放器容器位置
-        const musicContainer = document.getElementById("music-player-container");
         if (musicContainer) {
             musicContainer.style.bottom = `${baseBottom + offset}px`;
         }
