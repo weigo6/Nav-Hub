@@ -2,6 +2,8 @@ import yaml
 import os
 import requests
 import hashlib
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
@@ -15,6 +17,24 @@ class Colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+_thread_local = threading.local()
+_validate_icon_cache = {}
+_validate_icon_cache_lock = threading.Lock()
+_fallback_icon_cache = {}
+_fallback_icon_cache_lock = threading.Lock()
+
+def _get_session():
+    session = getattr(_thread_local, 'session', None)
+    if session is None:
+        session = requests.Session()
+        _thread_local.session = session
+    return session
+
+def _get_default_headers():
+    return {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
 
 # CSS styles
 CUSTOM_CSS = """
@@ -614,14 +634,23 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 """
 
-def validate_icon(url, headers):
+def validate_icon(url, headers, session=None):
     """
     Validate an icon URL by performing a GET request.
     Checks for status 200, valid image content-type, and permissible CORP headers.
     Returns the URL if valid, None otherwise.
     """
+    if not url:
+        return None
+
+    with _validate_icon_cache_lock:
+        if url in _validate_icon_cache:
+            cached = _validate_icon_cache[url]
+            return cached if cached else None
+
+    session = session or _get_session()
     try:
-        response = requests.get(url, headers=headers, timeout=5)
+        response = session.get(url, headers=headers, timeout=5)
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type', '').lower()
             corp = response.headers.get('Cross-Origin-Resource-Policy', '').lower()
@@ -629,26 +658,39 @@ def validate_icon(url, headers):
             # 1. CORB Check: Must be an image type
             if any(t in content_type for t in ['text/html', 'application/json', 'application/xml']):
                 print(f"  {Colors.WARNING}[SKIP]{Colors.ENDC} Non-image Content-Type: {url} ({content_type})")
+                with _validate_icon_cache_lock:
+                    _validate_icon_cache[url] = False
                 return None
 
             if not content_type.startswith('image/'):
                 is_ico = url.endswith('.ico') or response.url.endswith('.ico')
                 if not (is_ico and len(response.content) > 0):
                     print(f"  {Colors.WARNING}[SKIP]{Colors.ENDC} Invalid Content-Type: {url} ({content_type})")
+                    with _validate_icon_cache_lock:
+                        _validate_icon_cache[url] = False
                     return None
 
             # 2. CORP Check
             if corp in ['same-origin', 'same-site']:
                 print(f"  {Colors.WARNING}[SKIP]{Colors.ENDC} CORP Block: {url} (Policy: {corp})")
+                with _validate_icon_cache_lock:
+                    _validate_icon_cache[url] = False
                 return None
             
             if len(response.content) > 0:
+                with _validate_icon_cache_lock:
+                    _validate_icon_cache[url] = url
                 return url
+        else:
+            with _validate_icon_cache_lock:
+                _validate_icon_cache[url] = False
     except:
         pass
+    with _validate_icon_cache_lock:
+        _validate_icon_cache[url] = False
     return None
 
-def extract_icon_from_soup(soup, url, headers):
+def extract_icon_from_soup(soup, url, headers, session=None):
     # Search for icon links (icon, shortcut icon, apple-touch-icon)
     icon_rel = ['icon', 'shortcut icon', 'apple-touch-icon']
     icon_links = soup.find_all('link', rel=lambda x: x and x.lower() in icon_rel)
@@ -661,20 +703,19 @@ def extract_icon_from_soup(soup, url, headers):
                     continue
             
             full_icon_url = urljoin(url, href)
-            if validate_icon(full_icon_url, headers):
+            if validate_icon(full_icon_url, headers, session=session):
                 return full_icon_url
     return None
 
-def fetch_site_metadata(url):
+def fetch_site_metadata(url, session=None, headers=None):
     if not url or url.startswith('#'):
         return None
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
+    headers = headers or _get_default_headers()
+    session = session or _get_session()
 
     try:
-        response = requests.get(url, headers=headers, timeout=5)
+        response = session.get(url, headers=headers, timeout=5)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -694,7 +735,7 @@ def fetch_site_metadata(url):
                 result['description'] = content.strip()
                 
         # Icon
-        icon_url = extract_icon_from_soup(soup, url, headers)
+        icon_url = extract_icon_from_soup(soup, url, headers, session=session)
         if icon_url:
             result['icon'] = icon_url
             
@@ -704,30 +745,38 @@ def fetch_site_metadata(url):
         print(f"  {Colors.FAIL}[ERROR]{Colors.ENDC} Could not fetch metadata for {url}: {e}")
         return None
 
-def get_fallback_icon(url):
+def get_fallback_icon(url, session=None, headers=None):
     if not url or url.startswith('#'):
         return None
         
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
+    headers = headers or _get_default_headers()
+    session = session or _get_session()
 
     parsed_url = urlparse(url)
     if not (parsed_url.scheme and parsed_url.netloc):
         return None
 
+    with _fallback_icon_cache_lock:
+        if parsed_url.netloc in _fallback_icon_cache:
+            cached = _fallback_icon_cache[parsed_url.netloc]
+            return cached if cached else None
+
     # 1. Favicon.ico
     favicon_url = f"{parsed_url.scheme}://{parsed_url.netloc}/favicon.ico"
-    if validate_icon(favicon_url, headers):
+    if validate_icon(favicon_url, headers, session=session):
+        with _fallback_icon_cache_lock:
+            _fallback_icon_cache[parsed_url.netloc] = favicon_url
         return favicon_url
     
     # 2. Google
     google_url = f"https://www.google.com/s2/favicons?domain={parsed_url.netloc}&sz=64"
     try:
-        g_resp = requests.get(google_url, timeout=5)
+        g_resp = session.get(google_url, timeout=5)
         if g_resp.status_code == 200:
             md5 = hashlib.md5(g_resp.content).hexdigest()
             if md5 != "b8a0bf372c762e966cc99ede8682bc71":
+                with _fallback_icon_cache_lock:
+                    _fallback_icon_cache[parsed_url.netloc] = google_url
                 return google_url
             else:
                 print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Google returned default globe icon.")
@@ -739,10 +788,12 @@ def get_fallback_icon(url):
     # 3. Yandex
     yandex_url = f"https://favicon.yandex.net/favicon/{parsed_url.netloc}?size=32"
     try:
-        y_resp = requests.get(yandex_url, timeout=5)
+        y_resp = session.get(yandex_url, timeout=5)
         if y_resp.status_code == 200:
             md5 = hashlib.md5(y_resp.content).hexdigest()
             if md5 != "5047fd356fc4802e4fe471ae09f9efe5":
+                with _fallback_icon_cache_lock:
+                    _fallback_icon_cache[parsed_url.netloc] = yandex_url
                 return yandex_url
             else:
                 print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Yandex returned default empty icon.")
@@ -752,7 +803,70 @@ def get_fallback_icon(url):
         print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Yandex check failed: {e}")
             
     print(f"  {Colors.HEADER}[DEFAULT]{Colors.ENDC} Using default SVG icon.")
+    with _fallback_icon_cache_lock:
+        _fallback_icon_cache[parsed_url.netloc] = False
     return None
+
+def _process_nav_item(item):
+    logs = []
+
+    def log(message):
+        logs.append(message)
+
+    try:
+        name = item.get('name', '')
+        url = item.get('url', '#')
+        desc = item.get('description', '')
+        icon = item.get('icon', '')
+
+        headers = _get_default_headers()
+        session = _get_session()
+
+        if icon:
+            if icon.startswith('http://') or icon.startswith('https://'):
+                log(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking icon for {name}...")
+                if validate_icon(icon, headers, session=session):
+                    log(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {icon}")
+                else:
+                    log(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Remote icon validation failed for {name} ({icon})")
+            else:
+                log(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking local icon for {name}...")
+                local_path = os.path.join('docs', icon.lstrip('/\\'))
+                if os.path.exists(local_path):
+                    log(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {local_path}")
+                else:
+                    log(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Local icon file not found for {name}: {local_path}")
+
+        if (not name or not desc or not icon) and url and not url.startswith('#'):
+            log(f"{Colors.OKCYAN}[FETCH]{Colors.ENDC} Fetching metadata for {url}...")
+            metadata = fetch_site_metadata(url, session=session, headers=headers)
+            if metadata:
+                if not name and metadata.get('title'):
+                    name = metadata['title']
+                    log(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Title: {name}")
+                if not desc and metadata.get('description'):
+                    desc = metadata['description']
+                    log(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Desc: {desc}")
+                if not icon and metadata.get('icon'):
+                    icon = metadata['icon']
+                    log(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Icon: {icon}")
+
+        if not name and url:
+            parsed = urlparse(url)
+            if parsed.netloc:
+                name = parsed.netloc
+                log(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Title (Fallback): {name}")
+
+        if not icon and url and not url.startswith('#'):
+            log(f"{Colors.OKCYAN}[FALLBACK]{Colors.ENDC} Fetching fallback icon for {name or url}...")
+            fallback_icon = get_fallback_icon(url, session=session, headers=headers)
+            if fallback_icon:
+                icon = fallback_icon
+                log(f"  {Colors.OKGREEN}[FOUND]{Colors.ENDC} {icon}")
+
+        return {'name': name, 'url': url, 'desc': desc, 'icon': icon}, logs
+    except Exception as e:
+        return {'name': item.get('name', ''), 'url': item.get('url', '#'), 'desc': item.get('description', ''), 'icon': item.get('icon', '')}, [f"{Colors.FAIL}[ERROR]{Colors.ENDC} Item processing failed for {item.get('url', '#')}: {e}"]
 
 def generate_nav():
     with open('nav_data.yml', 'r', encoding='utf-8') as f:
@@ -812,6 +926,17 @@ def generate_nav():
     title = meta.get('title', '导航站')
     content.append(f"# {title} {{ .hidden-h1 }}")
     content.append("")
+
+    env_workers = os.environ.get('NAV_VALIDATION_WORKERS') or os.environ.get('NAV_VALIDATE_WORKERS')
+    workers = config.get('validation_workers', None) if isinstance(config, dict) else None
+    if env_workers:
+        try:
+            workers = int(env_workers)
+        except Exception:
+            workers = None
+    if not isinstance(workers, int) or workers <= 0:
+        cpu = os.cpu_count() or 2
+        workers = min(24, max(4, cpu * 5))
     
     for i, category in enumerate(nav_items):
         cat_id = f"category-{i+1}"
@@ -831,61 +956,37 @@ def generate_nav():
         content.append('<div class="grid cards">')
         content.append('<ul>')
         
-        for item in category['items']:
-            name = item.get('name', '')
-            url = item.get('url', '#')
-            desc = item.get('description', '')
-            icon = item.get('icon', '')
+        items = category.get('items', [])
+        results = [None] * len(items)
+        item_logs = [None] * len(items)
 
-            # Validate manually configured icon
-            if icon:
-                if icon.startswith('http://') or icon.startswith('https://'):
-                    print(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking icon for {name}...")
-                    headers = {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-                    }
-                    if validate_icon(icon, headers):
-                        print(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {icon}")
-                    else:
-                        print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Remote icon validation failed for {name} ({icon})")
-                else:
-                    # Local path check (relative to docs/)
-                    print(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking local icon for {name}...")
-                    local_path = os.path.join('docs', icon.lstrip('/\\'))
-                    if os.path.exists(local_path):
-                        print(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {local_path}")
-                    else:
-                        print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Local icon file not found for {name}: {local_path}")
-            
-            # Auto-fetch metadata if needed
-            if (not name or not desc or not icon) and url and not url.startswith('#'):
-                print(f"{Colors.OKCYAN}[FETCH]{Colors.ENDC} Fetching metadata for {url}...")
-                metadata = fetch_site_metadata(url)
-                if metadata:
-                    if not name and metadata.get('title'):
-                        name = metadata['title']
-                        print(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Title: {name}")
-                    if not desc and metadata.get('description'):
-                        desc = metadata['description']
-                        print(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Desc: {desc}")
-                    if not icon and metadata.get('icon'):
-                        icon = metadata['icon']
-                        print(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Icon: {icon}")
+        if workers > 1 and len(items) > 1:
+            with ThreadPoolExecutor(max_workers=min(workers, len(items))) as executor:
+                futures = {executor.submit(_process_nav_item, item): idx for idx, item in enumerate(items)}
+                for future in as_completed(futures):
+                    idx = futures[future]
+                    try:
+                        result, logs = future.result()
+                    except Exception as e:
+                        item = items[idx]
+                        result = {'name': item.get('name', ''), 'url': item.get('url', '#'), 'desc': item.get('description', ''), 'icon': item.get('icon', '')}
+                        logs = [f"{Colors.FAIL}[ERROR]{Colors.ENDC} Item processing failed for {item.get('url', '#')}: {e}"]
+                    results[idx] = result
+                    item_logs[idx] = logs
+        else:
+            for idx, item in enumerate(items):
+                result, logs = _process_nav_item(item)
+                results[idx] = result
+                item_logs[idx] = logs
 
-            # Fallback for name if still missing (use hostname)
-            if not name and url:
-                parsed = urlparse(url)
-                if parsed.netloc:
-                    name = parsed.netloc
-                    print(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Title (Fallback): {name}")
+        for idx in range(len(items)):
+            for line in item_logs[idx]:
+                print(line)
 
-            # Fallback for icon if still missing
-            if not icon and url and not url.startswith('#'):
-                print(f"{Colors.OKCYAN}[FALLBACK]{Colors.ENDC} Fetching fallback icon for {name or url}...")
-                fallback_icon = get_fallback_icon(url)
-                if fallback_icon:
-                    icon = fallback_icon
-                    print(f"  {Colors.OKGREEN}[FOUND]{Colors.ENDC} {icon}")
+            name = results[idx].get('name', '')
+            url = results[idx].get('url', '#')
+            desc = results[idx].get('desc', '')
+            icon = results[idx].get('icon', '')
             
             icon_html = ""
             if icon:
