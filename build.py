@@ -992,7 +992,7 @@ def generate_nav():
             if icon:
                 # Add no-referrer if it's a remote URL to prevent tracking/hotlinking blocking
                 referrer_policy = ' referrerpolicy="no-referrer"' if icon.startswith('http') else ''
-                img_attrs = f'src="{icon}" alt="{name}" onerror="handleImageError(this)"{referrer_policy}'
+                img_attrs = f'src="{icon}" alt="{name}" loading="lazy" decoding="async" onerror="handleImageError(this)"{referrer_policy}'
                 icon_html = f'<img {img_attrs}>'
             else:
                  icon_html = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="#9e9e9e"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>'
