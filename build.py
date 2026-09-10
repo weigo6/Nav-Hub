@@ -1,5 +1,6 @@
 import yaml
 import os
+import socket
 import requests
 import hashlib
 import threading
@@ -23,6 +24,31 @@ _validate_icon_cache = {}
 _validate_icon_cache_lock = threading.Lock()
 _fallback_icon_cache = {}
 _fallback_icon_cache_lock = threading.Lock()
+_dead_link_cache = {}
+_dead_link_cache_lock = threading.Lock()
+
+# Report options accepted in nav_data.yml under config. Each maps to whether the
+# corresponding section of the health report is included.
+_HEALTH_REPORT_OPTIONS = ('report_icon_sources', 'report_fallback_icons')
+
+# The favicon services answer with a placeholder image instead of an error when
+# they have no icon for a domain:
+#   Google -> HTTP 404 + a generic globe (any requested size yields 16x16)
+#   Yandex -> HTTP 200 + a 1x1 blank transparent PNG
+# Response size must NOT be used to tell them apart: a real site icon can be
+# smaller than the Google globe (measured: 281 byte 16x16 real icon vs a 726
+# byte globe), so only the status code and the image fingerprints are reliable.
+FAVICON_PLACEHOLDER_MD5 = {
+    'b8a0bf372c762e966cc99ede8682bc71',  # Google generic globe
+    '5047fd356fc4802e4fe471ae09f9efe5',  # Yandex 1x1 blank image
+}
+# A favicon smaller than this is a placeholder, whatever service sent it. A
+# real icon is at least a couple of hundred bytes, so this only rejects the
+# 1x1 blanks and truncated replies and never a genuine icon.
+FAVICON_ABSURD_BYTES = 100
+
+# Full width separator used by the health report block.
+_REPORT_RULE = Colors.BOLD + '=' * 78 + Colors.ENDC
 
 def _get_session():
     session = getattr(_thread_local, 'session', None)
@@ -663,7 +689,15 @@ def validate_icon(url, headers, session=None):
                 return None
 
             if not content_type.startswith('image/'):
-                is_ico = url.endswith('.ico') or response.url.endswith('.ico')
+                # Some servers send an .ico under a non-image type
+                # (application/x-ico, image/vnd.microsoft.icon is already handled
+                # above), and cache-busting query strings such as
+                # "favicon.ico?v=123" would defeat a naive endswith() check, so
+                # compare the URL path instead.
+                is_ico = any(
+                    urlparse(candidate).path.lower().endswith('.ico')
+                    for candidate in (url, response.url)
+                )
                 if not (is_ico and len(response.content) > 0):
                     print(f"  {Colors.WARNING}[SKIP]{Colors.ENDC} Invalid Content-Type: {url} ({content_type})")
                     with _validate_icon_cache_lock:
@@ -676,16 +710,13 @@ def validate_icon(url, headers, session=None):
                 with _validate_icon_cache_lock:
                     _validate_icon_cache[url] = False
                 return None
-            
+
             if len(response.content) > 0:
                 with _validate_icon_cache_lock:
                     _validate_icon_cache[url] = url
                 return url
-        else:
-            with _validate_icon_cache_lock:
-                _validate_icon_cache[url] = False
-    except:
-        pass
+    except Exception as e:
+        print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Icon check failed for {url}: {type(e).__name__}")
     with _validate_icon_cache_lock:
         _validate_icon_cache[url] = False
     return None
@@ -745,43 +776,71 @@ def fetch_site_metadata(url, session=None, headers=None):
         print(f"  {Colors.FAIL}[ERROR]{Colors.ENDC} Could not fetch metadata for {url}: {e}")
         return None
 
-def get_fallback_icon(url, session=None, headers=None):
+def _reject_fallback_image(response, service):
+    """
+    Return a human readable reason when a favicon service answered without a
+    usable icon, or None when the response looks like a real icon.
+
+    The only reliable signals are the status code and the placeholder image
+    fingerprints. Response size is deliberately NOT used: depending on the site
+    a genuine icon can be smaller than the placeholder, so a size threshold
+    would reject perfectly good icons.
+    """
+    if response.status_code == 404:
+        return f"{service} 返回 HTTP 404（该服务无此站点图标）"
+    if response.status_code != 200:
+        return f"{service} 返回 HTTP {response.status_code}"
+    if len(response.content) < FAVICON_ABSURD_BYTES:
+        return f"{service} 返回空图（{len(response.content)} 字节）"
+    if hashlib.md5(response.content).hexdigest() in FAVICON_PLACEHOLDER_MD5:
+        return f"{service} 返回默认占位图"
+    return None
+
+
+def get_fallback_icon(url, session=None, headers=None, source=None):
+    """
+    Resolve a fallback icon for a site.
+
+    Returns (icon_url, source, reason). `source` is one of 'favicon', 'google',
+    'yandex' when an icon was found. `reason` explains the failure otherwise.
+    """
     if not url or url.startswith('#'):
-        return None
-        
+        return None, None, '无效地址'
+
     headers = headers or _get_default_headers()
     session = session or _get_session()
 
     parsed_url = urlparse(url)
     if not (parsed_url.scheme and parsed_url.netloc):
-        return None
+        return None, None, '无法解析域名'
 
     with _fallback_icon_cache_lock:
         if parsed_url.netloc in _fallback_icon_cache:
             cached = _fallback_icon_cache[parsed_url.netloc]
-            return cached if cached else None
+            if cached is False:
+                return None, None, '所有兜底来源均不可用'
+            if isinstance(cached, tuple):
+                return cached[0], cached[1], ''
+            return cached, 'favicon', ''
 
     # 1. Favicon.ico
     favicon_url = f"{parsed_url.scheme}://{parsed_url.netloc}/favicon.ico"
     if validate_icon(favicon_url, headers, session=session):
         with _fallback_icon_cache_lock:
-            _fallback_icon_cache[parsed_url.netloc] = favicon_url
-        return favicon_url
-    
+            _fallback_icon_cache[parsed_url.netloc] = (favicon_url, 'favicon')
+        return favicon_url, 'favicon', ''
+
     # 2. Google
     google_url = f"https://www.google.com/s2/favicons?domain={parsed_url.netloc}&sz=64"
     try:
         g_resp = session.get(google_url, timeout=5)
-        if g_resp.status_code == 200:
-            md5 = hashlib.md5(g_resp.content).hexdigest()
-            if md5 != "b8a0bf372c762e966cc99ede8682bc71":
-                with _fallback_icon_cache_lock:
-                    _fallback_icon_cache[parsed_url.netloc] = google_url
-                return google_url
-            else:
-                print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Google returned default globe icon.")
+        reason = _reject_fallback_image(g_resp, 'Google')
+        if reason:
+            print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} {reason}")
         else:
-            print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Google returned status {g_resp.status_code}.")
+            with _fallback_icon_cache_lock:
+                _fallback_icon_cache[parsed_url.netloc] = (google_url, 'google')
+            return google_url, 'google', ''
     except Exception as e:
         print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Google check failed: {e}")
 
@@ -789,23 +848,20 @@ def get_fallback_icon(url, session=None, headers=None):
     yandex_url = f"https://favicon.yandex.net/favicon/{parsed_url.netloc}?size=32"
     try:
         y_resp = session.get(yandex_url, timeout=5)
-        if y_resp.status_code == 200:
-            md5 = hashlib.md5(y_resp.content).hexdigest()
-            if md5 != "5047fd356fc4802e4fe471ae09f9efe5":
-                with _fallback_icon_cache_lock:
-                    _fallback_icon_cache[parsed_url.netloc] = yandex_url
-                return yandex_url
-            else:
-                print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Yandex returned default empty icon.")
+        reason = _reject_fallback_image(y_resp, 'Yandex')
+        if reason:
+            print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} {reason}")
         else:
-            print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Yandex returned status {y_resp.status_code}.")
+            with _fallback_icon_cache_lock:
+                _fallback_icon_cache[parsed_url.netloc] = (yandex_url, 'yandex')
+            return yandex_url, 'yandex', ''
     except Exception as e:
         print(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Yandex check failed: {e}")
-            
+
     print(f"  {Colors.HEADER}[DEFAULT]{Colors.ENDC} Using default SVG icon.")
     with _fallback_icon_cache_lock:
         _fallback_icon_cache[parsed_url.netloc] = False
-    return None
+    return None, None, '所有兜底来源均不可用'
 
 def _process_nav_item(item):
     logs = []
@@ -822,19 +878,37 @@ def _process_nav_item(item):
         headers = _get_default_headers()
         session = _get_session()
 
+        # Icon provenance, used by the icon report at the end of the build.
+        # Each entry is (kind, icon, domain). Order matters: the first source is
+        # what the page shows, the second (if any) is the browser's runtime
+        # fallback. `domain` is the site the icon describes, not the icon CDN,
+        # so a fallback for a dead domain can be spotted.
+        icon_sources = []
+        icon_problem = ''
+        item_domain = None
+        if url and not url.startswith('#'):
+            try:
+                item_domain = urlparse(url).hostname
+            except ValueError:
+                item_domain = None
+
         if icon:
             if icon.startswith('http://') or icon.startswith('https://'):
                 log(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking icon for {name}...")
                 if validate_icon(icon, headers, session=session):
                     log(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {icon}")
+                    icon_sources.append(('configured', icon, item_domain))
                 else:
+                    icon_problem = f"配置的图标无法访问或不是图片：{icon}"
                     log(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Remote icon validation failed for {name} ({icon})")
             else:
                 log(f"{Colors.OKCYAN}[CHECK]{Colors.ENDC} Checking local icon for {name}...")
                 local_path = os.path.join('docs', icon.lstrip('/\\'))
                 if os.path.exists(local_path):
                     log(f"  {Colors.OKGREEN}[OK]{Colors.ENDC} {local_path}")
+                    icon_sources.append(('local', icon, item_domain))
                 else:
+                    icon_problem = f"本地图标文件不存在：{local_path}"
                     log(f"  {Colors.WARNING}[WARN]{Colors.ENDC} Local icon file not found for {name}: {local_path}")
 
         if (not name or not desc or not icon) and url and not url.startswith('#'):
@@ -850,6 +924,7 @@ def _process_nav_item(item):
                 if not icon and metadata.get('icon'):
                     icon = metadata['icon']
                     log(f"  {Colors.WARNING}[AUTO]{Colors.ENDC} + Icon: {icon}")
+                    icon_sources.append(('page', icon, item_domain))
 
         if not name and url:
             parsed = urlparse(url)
@@ -859,14 +934,363 @@ def _process_nav_item(item):
 
         if not icon and url and not url.startswith('#'):
             log(f"{Colors.OKCYAN}[FALLBACK]{Colors.ENDC} Fetching fallback icon for {name or url}...")
-            fallback_icon = get_fallback_icon(url, session=session, headers=headers)
+            fallback_icon, fallback_source, fallback_reason = get_fallback_icon(
+                url, session=session, headers=headers)
             if fallback_icon:
                 icon = fallback_icon
+                icon_sources.append((fallback_source, icon, item_domain))
                 log(f"  {Colors.OKGREEN}[FOUND]{Colors.ENDC} {icon}")
+            elif not icon_problem:
+                icon_problem = fallback_reason or '未找到可用图标'
 
-        return {'name': name, 'url': url, 'desc': desc, 'icon': icon}, logs
+        return {
+            'name': name,
+            'url': url,
+            'desc': desc,
+            'icon': icon,
+            'icon_sources': icon_sources,
+            'icon_problem': icon_problem,
+        }, logs
     except Exception as e:
-        return {'name': item.get('name', ''), 'url': item.get('url', '#'), 'desc': item.get('description', ''), 'icon': item.get('icon', '')}, [f"{Colors.FAIL}[ERROR]{Colors.ENDC} Item processing failed for {item.get('url', '#')}: {e}"]
+        return {
+            'name': item.get('name', ''),
+            'url': item.get('url', '#'),
+            'desc': item.get('description', ''),
+            'icon': item.get('icon', ''),
+            'icon_sources': [],
+            'icon_problem': f"处理条目时出错：{e}",
+        }, [f"{Colors.FAIL}[ERROR]{Colors.ENDC} Item processing failed for {item.get('url', '#')}: {e}"]
+
+def _collect_nav_hosts(nav_items):
+    """
+    Collect unique hosts from the configured navigation URLs.
+
+    Returns a list of dicts, each describing one host together with the first
+    navigation item that references it. Duplicate hosts are merged so that a
+    host referenced by several entries is only resolved once.
+    """
+    hosts = {}
+    for category in nav_items:
+        cat_name = category.get('category', '')
+        for item in category.get('items', []):
+            url = item.get('url') or ''
+            if not url or url.startswith('#'):
+                continue
+            try:
+                host = urlparse(url).hostname
+            except ValueError:
+                host = None
+            if not host:
+                continue
+            key = host.lower()
+            if key not in hosts:
+                hosts[key] = {
+                    'host': host,
+                    'name': item.get('name') or host,
+                    'category': cat_name,
+                    'url': url,
+                }
+    return list(hosts.values())
+
+
+def _check_host_dns(host):
+    """
+    Resolve a hostname and classify the outcome.
+
+    Only genuine name-resolution failures are treated as "dead". Transport
+    level problems (timeouts, refused connections, TLS errors) mean the host
+    does resolve, so they are reported separately and never counted as dead.
+    """
+    with _dead_link_cache_lock:
+        if host in _dead_link_cache:
+            return _dead_link_cache[host]
+
+    try:
+        lookup = host
+        try:
+            # IDN hosts must be punycode encoded before resolution.
+            lookup = host.encode('idna').decode('ascii')
+        except UnicodeError:
+            pass
+
+        socket.getaddrinfo(lookup, None, proto=socket.IPPROTO_TCP)
+        status, detail = 'ok', ''
+    except socket.gaierror as e:
+        status = 'dead'
+        detail = (e.strerror or str(e) or '').strip() or '域名无法解析'
+    except socket.herror as e:
+        status = 'dead'
+        detail = str(e).strip() or '域名无法解析'
+    except Exception as e:
+        status = 'unknown'
+        detail = f"{type(e).__name__}: {e}"
+
+    result = (status, detail)
+    with _dead_link_cache_lock:
+        _dead_link_cache[host] = result
+    return result
+
+
+def check_dead_links(nav_items, workers):
+    """
+    Resolve every navigation host and return the ones that no longer exist.
+
+    Never raises: detection problems must not be able to break the build.
+    """
+    hosts = _collect_nav_hosts(nav_items)
+    if not hosts:
+        return 0, [], []
+
+    if not isinstance(workers, int) or workers <= 0:
+        workers = 4
+
+    dead, unknown = [], []
+    try:
+        with ThreadPoolExecutor(max_workers=min(workers, len(hosts))) as executor:
+            futures = {executor.submit(_check_host_dns, entry['host']): entry for entry in hosts}
+            for future in as_completed(futures):
+                entry = futures[future]
+                try:
+                    status, detail = future.result()
+                except Exception as e:
+                    status, detail = 'unknown', f"{type(e).__name__}: {e}"
+                record = dict(entry, detail=detail)
+                if status == 'dead':
+                    dead.append(record)
+                elif status == 'unknown':
+                    unknown.append(record)
+    except Exception as e:
+        print(f"{Colors.FAIL}[ERROR]{Colors.ENDC} Dead link check aborted: {e}")
+        return len(hosts), [], []
+
+    dead.sort(key=lambda r: (r['category'], r['host']))
+    unknown.sort(key=lambda r: (r['category'], r['host']))
+    return len(hosts), dead, unknown
+
+
+def collect_icon_problems(nav_items, results_by_category):
+    """
+    Work out which navigation items end up without a usable icon, and why.
+
+    `results_by_category` is the list of processed result lists produced by
+    generate_nav(). Every entry is classified into exactly one bucket:
+
+      missing   - nothing was found, the page shows the placeholder SVG
+      failed    - a configured icon failed, the page relies on a fallback
+      depend    - the page depends on a generic favicon service
+      dangling  - the fallback domain no longer resolves, so it can never load
+    """
+    missing, failed, depend, dangling = [], [], [], []
+
+    for category, results in zip(nav_items, results_by_category):
+        cat_name = category.get('category', '')
+        for result in results:
+            if not result:
+                continue
+            url = result.get('url', '#')
+            if not url or url.startswith('#'):
+                continue
+            record = {
+                'category': cat_name,
+                'name': result.get('name') or url,
+                'url': url,
+                'icon': result.get('icon', ''),
+                'problem': result.get('icon_problem', ''),
+            }
+            sources = result.get('icon_sources') or []
+            primary = sources[0] if sources else None
+            secondary = sources[1] if len(sources) > 1 else None
+
+            if primary is None:
+                missing.append(record)
+                continue
+
+            # The page shows the primary source; report on it first.
+            primary_kind, _primary_icon, primary_domain = primary
+            if primary_kind in ('google', 'yandex'):
+                if primary_domain and _check_host_dns(primary_domain)[0] == 'dead':
+                    dangling.append(record)
+                else:
+                    depend.append(dict(record, source=primary_kind))
+
+            if secondary is not None:
+                sec_kind, sec_icon, sec_domain = secondary
+                if sec_kind in ('google', 'yandex'):
+                    if sec_domain and _check_host_dns(sec_domain)[0] == 'dead':
+                        dangling.append(dict(record, icon=sec_icon))
+                    elif primary_kind in ('configured', 'local'):
+                        depend.append(dict(record, source=sec_kind, icon=sec_icon))
+                elif sec_kind in ('favicon', 'page') and primary_kind in ('configured', 'local'):
+                    failed.append(dict(record, source=sec_kind, icon=sec_icon))
+
+    return {'missing': missing, 'failed': failed, 'depend': depend, 'dangling': dangling}
+
+
+# How to describe each icon source in the report.
+ICON_SOURCE_LABEL = {
+    'configured': '配置的图标不可用',
+    'local': '本地图标文件缺失',
+    'page': '页面声明的图标无法下载',
+    'favicon': '站点 favicon.ico 不可用',
+    'google': 'Google 图标服务',
+    'yandex': 'Yandex 图标服务',
+}
+ICON_SOURCE_FALLBACK = {
+    'favicon': '改用站点 favicon.ico',
+    'page': '改用页面声明的图标',
+    'google': '运行时改用 Google 图标服务',
+    'yandex': '运行时改用 Yandex 图标服务',
+}
+
+
+def _format_icon_entry(index, record, extra=None, hide_problem=False):
+    lines = [f"  {index}. {Colors.BOLD}{record['name']}{Colors.ENDC}"]
+    lines.append(f"     分类：{record['category']}")
+    lines.append(f"     URL ：{record['url']}")
+    if not hide_problem and record.get('problem'):
+        lines.append(f"     原因：{record['problem']}")
+    if extra:
+        for line in str(extra).splitlines():
+            lines.append(f"     {line}")
+    if record.get('icon'):
+        lines.append(f"     图标：{record['icon']}")
+    return lines
+
+
+def _render_dns_section(total, dead, unknown):
+    """Render the site domain resolution section."""
+    lines = [f"{Colors.BOLD}[1] 站点域名解析（DNS）—— {total} 个域名{Colors.ENDC}"]
+
+    if dead:
+        lines.append(f"  {Colors.FAIL}{len(dead)} 个域名无法解析（站点已失效）：{Colors.ENDC}")
+        lines.append('')
+        for record in dead:
+            lines.append(f"  {Colors.FAIL}✗{Colors.ENDC} {Colors.BOLD}{record['host']}{Colors.ENDC}")
+            lines.append(f"      分类：{record['category']}")
+            lines.append(f"      站点：{record['name']}")
+            lines.append(f"      URL ：{record['url']}")
+            lines.append(f"      原因：{record['detail']}")
+            lines.append('')
+        lines.append(f"  {Colors.WARNING}建议：以上站点域名已不存在，核实后从 nav_data.yml 中移除。{Colors.ENDC}")
+    else:
+        lines.append(f"  {Colors.OKGREEN}✓ 全部解析正常。{Colors.ENDC}")
+
+    if unknown:
+        lines.append('')
+        lines.append(f"  {Colors.WARNING}另有 {len(unknown)} 个域名因本地解析异常被跳过（未计入失效）：{Colors.ENDC}")
+        for record in unknown:
+            lines.append(f"    - {record['host']}（{record['detail']}）")
+
+    lines.append(f"  {Colors.HEADER}注：DNS 解析失败是唯一失效判据；403 / 超时 / 证书错误多为反爬或临时故障，不计入。{Colors.ENDC}")
+    return lines
+
+
+def _render_icon_problem_section(buckets, counts):
+    """Render the per-site icon problems section."""
+    missing, failed = buckets['missing'], buckets['failed']
+    dangling, depend = buckets['dangling'], buckets['depend']
+
+    broken_total = len(missing) + len(failed) + len(dangling)
+    lines = [f"{Colors.BOLD}[2] 站点图标 —— {counts['sites']} 个站点{Colors.ENDC}"]
+
+    if not broken_total and not depend:
+        lines.append(f"  {Colors.OKGREEN}✓ 所有站点图标均已正常获取。{Colors.ENDC}")
+        return lines
+
+    if broken_total:
+        lines.append(f"  {Colors.FAIL}{broken_total} 个站点的图标存在问题：{Colors.ENDC}")
+    else:
+        lines.append(f"  {Colors.OKGREEN}✓ 所有站点都能拿到图标。{Colors.ENDC}")
+
+    # 1. Nothing at all: the page shows the grey placeholder.
+    if missing:
+        lines.append('')
+        lines.append(f"  {Colors.FAIL}【无可用图标】{len(missing)} 个 —— 页面上显示为灰色占位图{Colors.ENDC}")
+        lines.append('')
+        for i, record in enumerate(missing, 1):
+            lines.extend(_format_icon_entry(i, record))
+        lines.append('')
+        lines.append(f"  {Colors.WARNING}  建议：站点自身 favicon 与 Google/Yandex 兜底均无有效图标。")
+        lines.append(f"        可在 nav_data.yml 里为该条目手动指定 icon（推荐 cdn.simpleicons.org），")
+        lines.append(f"        或下载图标后放到 docs/images/icons/ 并改用本地相对路径。{Colors.ENDC}")
+
+    # 2. A configured icon failed, so the page silently uses something else.
+    if failed:
+        lines.append('')
+        lines.append(f"  {Colors.WARNING}【配置图标已失效】{len(failed)} 个 —— 已自动降级为其它来源{Colors.ENDC}")
+        lines.append('')
+        for i, record in enumerate(failed, 1):
+            kind = record.get('source')
+            lines.extend(_format_icon_entry(
+                i, record,
+                extra=f"降级：{ICON_SOURCE_FALLBACK.get(kind, '改用其它图标源')}（{record.get('icon', '')}）",
+                hide_problem=True,
+            ))
+        lines.append('')
+        lines.append(f"  {Colors.WARNING}  建议：替换失效的图标链接，或删除该 icon 字段交由自动获取。{Colors.ENDC}")
+
+    # 3. Fallback points at a host that no longer resolves.
+    if dangling:
+        lines.append('')
+        lines.append(f"  {Colors.FAIL}【兜底图标域名已失效】{len(dangling)} 个 —— 该图标必然加载失败{Colors.ENDC}")
+        lines.append('')
+        for i, record in enumerate(dangling, 1):
+            lines.extend(_format_icon_entry(i, record))
+        lines.append('')
+        lines.append(f"  {Colors.WARNING}  建议：这些站点的域名已停止解析，应先处理失效站点本身。{Colors.ENDC}")
+
+    # 4. Works, but depends on a third-party favicon service at runtime.
+    if depend:
+        lines.append('')
+        lines.append(f"  {Colors.OKBLUE}【依赖第三方图标服务】{len(depend)} 个 —— 图标可用，但非站点自身图标{Colors.ENDC}")
+        lines.append('')
+        for i, record in enumerate(depend, 1):
+            label = ICON_SOURCE_LABEL.get(record.get('source'), record.get('source'))
+            lines.append(f"  {i}. {record['name']}  ——  {label}")
+            lines.append(f"     分类：{record['category']}")
+            lines.append(f"     URL ：{record['url']}")
+            lines.append(f"     图标：{record['icon']}")
+        lines.append('')
+        lines.append(f"  {Colors.OKBLUE}  说明：取值依赖 Google / Yandex 服务，在部分网络环境下可能加载失败。{Colors.ENDC}")
+
+    return lines
+
+
+def report_health(nav_items, results_by_category, workers, options=None):
+    """
+    Run every build-time health check and print one consolidated report.
+
+    The report covers two independent concerns, in this order:
+
+      1. site domain resolution  - is the site itself still reachable at all
+      2. per-site icons          - does each card end up with a real icon
+
+    Nothing here may break the build: every check degrades to a warning.
+    """
+    options = options or {}
+    workers = workers if isinstance(workers, int) and workers > 0 else 4
+
+    total, dead, unknown = check_dead_links(nav_items, workers) if nav_items else (0, [], [])
+    buckets = collect_icon_problems(nav_items, results_by_category) if results_by_category else {
+        'missing': [], 'failed': [], 'depend': [], 'dangling': [],
+    }
+    if options.get('report_fallback_icons') is False or options.get('report_icon_sources') is False:
+        buckets['depend'] = []
+    counts = {'domains': total, 'sites': sum(len(r) for r in results_by_category)}
+
+    if not total and not results_by_category:
+        return
+
+    lines = ['', _REPORT_RULE, f"{Colors.BOLD}  构建健康检查报告{Colors.ENDC}", _REPORT_RULE]
+    if total:
+        lines.extend(_render_dns_section(total, dead, unknown))
+    if results_by_category:
+        lines.append('')
+        lines.extend(_render_icon_problem_section(buckets, counts))
+    lines.append(_REPORT_RULE)
+
+    print('\n'.join(lines))
+
 
 def generate_nav():
     with open('nav_data.yml', 'r', encoding='utf-8') as f:
@@ -937,7 +1361,10 @@ def generate_nav():
     if not isinstance(workers, int) or workers <= 0:
         cpu = os.cpu_count() or 2
         workers = min(24, max(4, cpu * 5))
-    
+
+    # Processed per-category results, kept for the icon report at the end.
+    category_results = []
+
     for i, category in enumerate(nav_items):
         cat_id = f"category-{i+1}"
         cat_name = category['category']
@@ -969,7 +1396,14 @@ def generate_nav():
                         result, logs = future.result()
                     except Exception as e:
                         item = items[idx]
-                        result = {'name': item.get('name', ''), 'url': item.get('url', '#'), 'desc': item.get('description', ''), 'icon': item.get('icon', '')}
+                        result = {
+                            'name': item.get('name', ''),
+                            'url': item.get('url', '#'),
+                            'desc': item.get('description', ''),
+                            'icon': item.get('icon', ''),
+                            'icon_sources': [],
+                            'icon_problem': f"处理条目时出错：{e}",
+                        }
                         logs = [f"{Colors.FAIL}[ERROR]{Colors.ENDC} Item processing failed for {item.get('url', '#')}: {e}"]
                     results[idx] = result
                     item_logs[idx] = logs
@@ -1009,13 +1443,27 @@ def generate_nav():
         content.append('</ul>')
         content.append('</div>')
         content.append("")
+        category_results.append(results)
 
     output_path = os.path.join('docs', output_filename)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(content))
-    
+
+    # Every health check runs last so its report is the final block of the build
+    # output (CI log viewers truncate the middle of long logs).
+    disable = str(os.environ.get('NAV_SKIP_DEAD_LINK_CHECK', '')).strip().lower()
+    if disable not in ('1', 'true', 'yes', 'on') and config.get('dead_link_check', True) is not False:
+        disabled = [config.get(name) is False for name in _HEALTH_REPORT_OPTIONS]
+        report_health(
+            nav_items,
+            category_results,
+            workers,
+            # 第四类「依赖第三方图标服务」是否输出。两个键都支持，任一为 false 即关闭。
+            options={'report_fallback_icons': not any(disabled)},
+        )
+
     print(f"{Colors.OKGREEN}Navigation page generated successfully in {output_path}{Colors.ENDC}")
 
 if __name__ == '__main__':

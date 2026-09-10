@@ -14,14 +14,14 @@ nav:
       - name: 谷歌 Gemini
         url: https://gemini.google.com
         description: 谷歌官方 AI 对话助手
-        icon: https://api.iconify.design/vscode-icons:file-type-gemini.svg
+        icon: https://cdn.simpleicons.org/googlegemini
       - name: 谷歌 AI Studio
         url: https://aistudio.google.com
         description: Google AI 开发者平台
       - name: ChatGPT
         url: https://chatgpt.com
         description: OpenAI 旗下的 AI 助手
-        icon: https://api.iconify.design/logos:openai-icon.svg
+        icon: images/icons/logos__openai-icon.svg
       - name: Claude
         url: https://claude.ai
         description: Anthropic 旗下的 AI 助手
@@ -32,7 +32,7 @@ nav:
       - name: DeepSeek
         url: https://www.deepseek.com
         description: 深度求索 AI 智能助手
-        icon: https://api.iconify.design/ri:deepseek-fill.svg?color=%231E90FF
+        icon: https://cdn.simpleicons.org/deepseek
       - name: 豆包
         url: https://www.doubao.com/chat
         description: 字节跳动旗下 AI 助手
@@ -48,6 +48,225 @@ nav:
       - name: Coze 扣子
         url: https://www.coze.cn
         description: 字节跳动 AI Bot 开发平台
+      - name: EKTI Chat
+        url: https://chat.ekti.cc/dashboard/overview
+        description: 自部署多模型 AI 对话面板
+      - name: 智谱 BigModel 开放平台
+        url: https://bigmodel.cn
+        description: 智谱 GLM 大模型 API 与开发平台
+      - name: OpenAI 官网
+        url: https://openai.com
+        description: GPT 系列模型与官方公告
+      - name: OpenAI 平台文档
+        url: https://platform.openai.com/docs
+        description: OpenAI API 参考与开发指南
+      - name: Anthropic
+        url: https://www.anthropic.com
+        description: Claude 系列模型官方机构
+        icon: https://cdn.simpleicons.org/anthropic
+      - name: Perplexity
+        url: https://www.perplexity.ai
+        description: 带引用来源的 AI 搜索问答
+        icon: https://cdn.simpleicons.org/perplexity
+      - name: Microsoft Copilot
+        url: https://copilot.microsoft.com
+        description: 微软 Bing 智能助手
+      - name: Mistral AI
+        url: https://chat.mistral.ai
+        description: 法国 Mistral 开源模型平台
+        icon: https://cdn.simpleicons.org/mistralai
+      - name: Groq Cloud
+        url: https://groq.com
+        description: 超高速 LPU 推理云服务
+      - name: Poe
+        url: https://poe.com
+        description: Quora 多模型聚合对话平台
+        icon: https://cdn.simpleicons.org/poe
+      - name: OpenRouter
+        url: https://openrouter.ai
+        description: 统一接入多家大模型 API
+        icon: https://cdn.simpleicons.org/openrouter
+      - name: Ollama
+        url: https://ollama.com
+        description: 本地一键运行开源大模型
+        icon: https://cdn.simpleicons.org/ollama
+      - name: LM Studio
+        url: https://lmstudio.ai
+        description: 本地大模型图形化运行环境
+        icon: https://cdn.simpleicons.org/lmstudio
+      - name: Kimi 月之暗面
+        url: https://www.moonshot.cn
+        description: 长上下文大模型与智能助手
+        icon: https://cdn.simpleicons.org/moonshotai
+      - name: 通义千问
+        url: https://www.tongyi.com
+        description: 阿里通义大模型对话入口
+        icon: https://cdn.simpleicons.org/qwen
+      - name: 百川智能
+        url: https://www.baichuan-ai.com
+        description: Baichuan 系列大模型
+      - name: MiniMax 海螺
+        url: https://www.minimaxi.com
+        description: 多模态大模型与海螺 AI
+        icon: https://cdn.simpleicons.org/minimax
+      - name: 阶跃星辰
+        url: https://platform.stepfun.com
+        description: Step 系列多模态大模型平台
+      - name: 商汤商量
+        url: https://chat.sensetime.com
+        description: 商汤日日新大模型助手
+      - name: 腾讯混元
+        url: https://cloud.tencent.com/product/hunyuan
+        description: 腾讯混元大模型开放平台
+      - name: 小浣熊家族
+        url: https://xiaohuanxiong.com
+        description: 商汤 AI 数据分析与办公助手
+      - name: Keeper CPA Codex
+        url: https://keeper.yuqiuxu.top/key-overview
+        description: 自部署 AI 密钥与账号总览
+        icon: images/icons/mdi__key-chain-variant.svg
+
+  - category: AI 应用与工具
+    icon: material/creation
+    items:
+      - name: Cursor
+        url: https://cursor.com
+        description: AI 原生代码编辑器
+        icon: https://cdn.simpleicons.org/cursor
+      - name: GitHub Copilot
+        url: https://github.com/features/copilot
+        description: GitHub 官方 AI 编程助手
+        icon: https://cdn.simpleicons.org/githubcopilot
+      - name: Trae
+        url: https://www.trae.ai
+        description: 字节跳动 AI 原生 IDE
+      - name: Continue
+        url: https://continue.dev
+        description: 开源可自托管编程助手插件
+      - name: Cline
+        url: https://cline.bot
+        description: VS Code 自主编码智能体
+        icon: https://cdn.simpleicons.org/cline
+      - name: Aider
+        url: https://aider.chat
+        description: 终端内的 AI 结对编程工具
+      - name: OpenCode
+        url: https://opencode.ai
+        description: 开源终端 AI 编码智能体
+      - name: v0
+        url: https://v0.dev
+        description: Vercel AI 界面与前端代码生成
+        icon: https://cdn.simpleicons.org/v0
+      - name: Replit
+        url: https://replit.com
+        description: 云端 AI 协作开发环境
+        icon: https://cdn.simpleicons.org/replit
+      - name: Lovable
+        url: https://lovable.dev
+        description: 对话式全栈应用生成平台
+      - name: Midjourney
+        url: https://www.midjourney.com
+        description: 顶级 AI 绘画生成平台
+      - name: Stability AI
+        url: https://stability.ai
+        description: Stable Diffusion 官方机构
+      - name: Leonardo AI
+        url: https://leonardo.ai
+        description: 游戏美术向 AI 绘图平台
+      - name: Krea
+        url: https://www.krea.ai
+        description: 实时 AI 图像与视频生成
+      - name: Ideogram
+        url: https://ideogram.ai
+        description: 擅长文字排版的 AI 绘图
+      - name: Recraft
+        url: https://www.recraft.ai
+        description: 矢量图形与品牌设计 AI 工具
+      - name: ComfyUI
+        url: https://comfy.org
+        description: 节点式 Stable Diffusion 工作流
+      - name: Civitai
+        url: https://civitai.com
+        description: 开源绘画模型与提示词社区
+      - name: Runway
+        url: https://runwayml.com
+        description: 专业级 AI 视频生成与编辑
+      - name: Luma AI
+        url: https://lumalabs.ai
+        description: Dream Machine 视频与三维生成
+      - name: Pika
+        url: https://pika.art
+        description: 轻量易用的 AI 视频生成
+      - name: HeyGen
+        url: https://www.heygen.com
+        description: AI 数字人视频与口播生成
+      - name: Suno
+        url: https://suno.com
+        description: 文字生成完整歌曲的 AI 平台
+        icon: https://cdn.simpleicons.org/suno
+      - name: ElevenLabs
+        url: https://elevenlabs.io
+        description: 高自然度 AI 语音合成与克隆
+        icon: https://cdn.simpleicons.org/elevenlabs
+      - name: 讯飞星火
+        url: https://xinghuo.xfyun.cn
+        description: 科大讯飞大模型与语音能力
+      - name: Sider
+        url: https://sider.ai
+        description: 浏览器侧边栏 AI 助手
+      - name: Monica
+        url: https://monica.im
+        description: 全能型浏览器 AI 助手
+      - name: Warp
+        url: https://www.warp.dev
+        description: AI 驱动的现代终端
+      - name: Gamma
+        url: https://gamma.app
+        description: AI 一键生成演示文稿与文档
+      - name: Notion AI
+        url: https://www.notion.so/product/ai
+        description: 笔记与知识库内的 AI 助手
+        icon: https://cdn.simpleicons.org/notion
+      - name: Adobe Firefly
+        url: https://firefly.adobe.com
+        description: Adobe 生成式 AI 创意工具
+      - name: remove.bg
+        url: https://www.remove.bg
+        description: AI 一键抠图去背景
+        icon: https://cdn.simpleicons.org/remove.bg
+      - name: Dify
+        url: https://dify.ai
+        description: 开源 LLM 应用编排平台
+        icon: https://cdn.simpleicons.org/dify
+      - name: n8n
+        url: https://n8n.io
+        description: 可视化 AI 工作流自动化
+        icon: https://cdn.simpleicons.org/n8n
+      - name: LangChain
+        url: https://www.langchain.com
+        description: LLM 应用开发框架
+        icon: https://cdn.simpleicons.org/langchain
+      - name: Open WebUI
+        url: https://openwebui.com
+        description: 自托管大模型对话前端
+      - name: AnythingLLM
+        url: https://anythingllm.com
+        description: 本地文档知识库问答平台
+      - name: Milvus
+        url: https://milvus.io
+        description: 开源向量数据库
+        icon: https://cdn.simpleicons.org/milvus
+      - name: Qdrant
+        url: https://qdrant.tech
+        description: 高性能向量相似度检索库
+        icon: https://cdn.simpleicons.org/qdrant
+      - name: NVIDIA 开发者
+        url: https://www.nvidia.cn
+        description: GPU 加速与深度学习开发资源
+        icon: https://cdn.simpleicons.org/nvidia
+      - name: fal.ai
+        url: https://fal.ai
+        description: 生成式媒体模型推理平台
 
   - category: 创作者工具
     icon: material/tools
@@ -128,6 +347,7 @@ nav:
         description: 嘉立创下单与订单管理
       - name: SimpleFOC 中文站
         url: https://simplefoc.cn/#
+        icon: images/icons/mdi__engine.svg
         description: 开源电机控制库中文文档
 
   - category: 考研与校务
@@ -151,9 +371,363 @@ nav:
       - name: 真题墙
         url: https://zhentiqiang.com
         description: 考研数学历年考试真题资源
-      - name: 江苏本科教学信息平台
-        url: https://jsgjc.jsed.edu.cn
-        description: 江苏省教学信息官方平台
+      - name: 天津理工大学研究生系统
+        url: https://yjsxt.tjut.edu.cn/gsapp/sys/yjsemaphome/portal/index.do
+        description: 研究生培养与学位管理门户
+        icon: images/icons/material_icon_theme__folder-docs.svg
+      - name: 天津理工大学网上办事大厅
+        url: https://ehall.tjut.edu.cn/guest/index.html#/
+        description: 校园一站式服务与办事入口
+      - name: 天津理工大学图书馆
+        url: https://lib.tjut.edu.cn/index.htm
+        description: 馆藏检索与电子资源访问
+        icon: images/icons/material_icon_theme__folder-docs.svg
+
+  - category: 科研文献检索
+    icon: material/library-shelves
+    items:
+      - name: AI4Paper 期刊导航
+        url: https://ai4paper.pro/journal/
+        description: AI 辅助论文期刊查找与投稿参考
+      - name: 中国知网 CNKI
+        url: https://www.cnki.net
+        description: 中文学术期刊、学位论文与会议文献
+      - name: 万方数据
+        url: https://www.wanfangdata.com.cn
+        description: 期刊、学位论文与科技报告数据库
+      - name: 维普期刊
+        url: https://www.cqvip.com
+        description: 中文科技期刊全文数据库
+      - name: 百度学术
+        url: https://xueshu.baidu.com
+        description: 中英文文献聚合检索与引证分析
+      - name: 谷歌学术
+        url: https://scholar.google.com
+        description: 全球学术文献检索与引用追踪
+        icon: https://cdn.simpleicons.org/googlescholar
+      - name: 文献部落
+        url: https://scholar.chongbuluo.com
+        description: 学术搜索引擎聚合导航
+        icon: https://www.google.com/s2/favicons?domain=scholar.chongbuluo.com&sz=64
+      - name: 国家哲学社会科学文献中心
+        url: https://www.ncpssd.org
+        description: 哲学社会科学免费全文资源
+      - name: 国家科技图书文献中心 NSTL
+        url: https://www.nstl.gov.cn
+        description: 国家级科技文献保障与服务
+      - name: 中国科学院文献情报中心
+        url: http://www.las.cas.cn
+        description: 中科院文献情报与学科服务
+        icon: https://www.google.com/s2/favicons?domain=www.las.cas.cn&sz=64
+      - name: 中国科学院期刊平台
+        url: https://www.sciengine.com
+        description: 中国科技期刊全文发布平台
+        icon: https://www.google.com/s2/favicons?domain=www.sciengine.com&sz=64
+      - name: 掌桥科研
+        url: https://www.zhangqiaokeyan.com
+        description: 中外文献一站式检索与获取
+      - name: 华艺线上图书馆
+        url: https://www.airitilibrary.com
+        description: 港澳台与中文期刊文献检索
+        icon: https://www.google.com/s2/favicons?domain=www.airitilibrary.com&sz=64
+      - name: arXiv
+        url: https://arxiv.org
+        description: 物理、数学与计算机预印本论文库
+        icon: https://cdn.simpleicons.org/arxiv
+      - name: Semantic Scholar
+        url: https://www.semanticscholar.org
+        description: AI 驱动的学术文献语义检索
+        icon: https://cdn.simpleicons.org/semanticscholar
+      - name: PubMed
+        url: https://pubmed.ncbi.nlm.nih.gov
+        description: 生物医学领域权威文献数据库
+        icon: https://cdn.simpleicons.org/pubmed
+      - name: bioRxiv
+        url: https://www.biorxiv.org
+        description: 生命科学预印本论文库
+        icon: https://www.google.com/s2/favicons?domain=www.biorxiv.org&sz=64
+      - name: Web of Science
+        url: https://www.webofscience.com
+        description: 全球权威引文索引数据库
+      - name: Scopus
+        url: https://www.scopus.com
+        description: 爱思唯尔文摘与引文数据库
+        icon: https://cdn.simpleicons.org/scopus
+      - name: ScienceDirect
+        url: https://www.sciencedirect.com
+        description: 爱思唯尔期刊与图书全文库
+        icon: https://www.google.com/s2/favicons?domain=www.sciencedirect.com&sz=64
+      - name: IEEE Xplore
+        url: https://ieeexplore.ieee.org
+        description: 电子电气与计算机领域顶级文献
+        icon: https://cdn.simpleicons.org/ieee
+      - name: ACM Digital Library
+        url: https://dl.acm.org
+        description: 计算机科学领域权威文献库
+        icon: https://cdn.simpleicons.org/acm
+      - name: SpringerLink
+        url: https://link.springer.com
+        description: 施普林格期刊与会议论文全文
+        icon: https://www.google.com/s2/favicons?domain=link.springer.com&sz=64
+      - name: Wiley Online Library
+        url: https://onlinelibrary.wiley.com
+        description: 威立期刊与在线图书资源
+        icon: https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=64
+      - name: Nature
+        url: https://www.nature.com
+        description: 自然系列期刊与科研新闻
+        icon: https://www.google.com/s2/favicons?domain=www.nature.com&sz=64
+      - name: Science
+        url: https://www.science.org
+        description: 科学系列期刊官方平台
+        icon: https://www.google.com/s2/favicons?domain=www.science.org&sz=64
+      - name: Cell Press
+        url: https://www.cell.com
+        description: 细胞出版社生命科学期刊
+        icon: https://www.google.com/s2/favicons?domain=www.cell.com&sz=64
+      - name: MDPI
+        url: https://www.mdpi.com
+        description: 开放获取多学科期刊出版平台
+        icon: https://www.google.com/s2/favicons?domain=www.mdpi.com&sz=64
+      - name: Frontiers
+        url: https://www.frontiersin.org
+        description: 开放获取期刊与同行评审平台
+        icon: https://www.google.com/s2/favicons?domain=www.frontiersin.org&sz=64
+      - name: ProQuest
+        url: https://www.proquest.com
+        description: 学位论文与多学科全文数据库
+        icon: https://www.google.com/s2/favicons?domain=www.proquest.com&sz=64
+      - name: JSTOR
+        url: https://www.jstor.org
+        description: 人文社科与自然科学过刊库
+        icon: https://www.google.com/s2/favicons?domain=www.jstor.org&sz=64
+      - name: 科研通
+        url: https://www.ablesci.com
+        description: 文献互助下载与科研工具集
+        icon: https://www.google.com/s2/favicons?domain=www.ablesci.com&sz=64
+      - name: Open Access 论文库
+        url: https://oa.mg
+        description: 开放获取论文的一站式检索
+        icon: https://www.google.com/s2/favicons?domain=oa.mg&sz=64
+      - name: Unpaywall
+        url: https://unpaywall.org
+        description: 合法免费全文获取插件服务
+        icon: https://www.google.com/s2/favicons?domain=unpaywall.org&sz=64
+      - name: Google Patents
+        url: https://patents.google.com
+        description: 全球专利全文检索与引证分析
+
+  - category: 科研工具与数据
+    icon: material/flask
+    items:
+      - name: 中国版权保护中心
+        url: https://register.ccopyright.com.cn
+        icon: images/icons/mdi__copyright.svg
+        description: 软件著作权登记官方入口
+      - name: 国家自然科学基金委
+        url: https://www.nsfc.gov.cn
+        description: 基金项目申报与资助信息
+        icon: https://www.google.com/s2/favicons?domain=www.nsfc.gov.cn&sz=64
+      - name: 中国科学技术协会
+        url: https://www.cast.org.cn
+        description: 学术交流与科技人才服务平台
+        icon: https://www.google.com/s2/favicons?domain=www.cast.org.cn&sz=64
+      - name: 中国科学院
+        url: https://www.cas.cn
+        description: 中科院科研动态与机构信息
+        icon: https://www.google.com/s2/favicons?domain=www.cas.cn&sz=64
+      - name: 中国工程院
+        url: https://www.cae.cn
+        description: 工程科技战略咨询与院士信息
+        icon: https://www.google.com/s2/favicons?domain=www.cae.cn&sz=64
+      - name: X-MOL 学术平台
+        url: https://www.x-mol.com
+        description: 化学与材料领域文献及资讯
+        icon: https://www.google.com/s2/favicons?domain=www.x-mol.com&sz=64
+      - name: LetPub 选刊投稿
+        url: https://www.letpub.com.cn
+        description: SCI 期刊查询与投稿经验
+        icon: https://www.google.com/s2/favicons?domain=www.letpub.com.cn&sz=64
+      - name: MedSci 梅斯医学
+        url: https://www.medsci.cn
+        description: 医学期刊查询与科研服务平台
+        icon: https://www.google.com/s2/favicons?domain=www.medsci.cn&sz=64
+      - name: 中科院期刊分区表
+        url: https://www.fenqubiao.com
+        description: 期刊分区查询与投稿参考
+        icon: https://www.google.com/s2/favicons?domain=www.fenqubiao.com&sz=64
+      - name: JCR 期刊引证报告
+        url: https://jcr.clarivate.com
+        description: 期刊影响因子与分区查询
+        icon: https://cdn.simpleicons.org/clarivate
+      - name: ORCID
+        url: https://orcid.org
+        description: 全球科研人员唯一身份标识
+        icon: https://cdn.simpleicons.org/orcid
+      - name: Crossref
+        url: https://www.crossref.org
+        description: DOI 注册与文献元数据检索
+        icon: https://www.google.com/s2/favicons?domain=www.crossref.org&sz=64
+      - name: Zotero
+        url: https://www.zotero.org
+        description: 开源文献管理与引文生成工具
+        icon: https://cdn.simpleicons.org/zotero
+      - name: Zotero 中文社区
+        url: https://zotero-chinese.com
+        description: Zotero 中文插件与使用文档
+        icon: https://www.google.com/s2/favicons?domain=zotero-chinese.com&sz=64
+      - name: JabRef
+        url: https://www.jabref.org
+        description: 开源 BibTeX 文献管理器
+        icon: https://www.google.com/s2/favicons?domain=www.jabref.org&sz=64
+      - name: Mendeley
+        url: https://www.mendeley.com
+        description: 文献管理、阅读与协作平台
+        icon: https://cdn.simpleicons.org/mendeley
+      - name: Overleaf
+        url: https://www.overleaf.com
+        description: 在线 LaTeX 协同写作平台
+        icon: https://cdn.simpleicons.org/overleaf
+      - name: LaTeX Project
+        url: https://www.latex-project.org
+        description: LaTeX 官方文档与发行说明
+        icon: https://cdn.simpleicons.org/latex
+      - name: CTAN
+        url: https://www.ctan.org
+        description: 全球 LaTeX 宏包与模板仓库
+        icon: https://www.google.com/s2/favicons?domain=www.ctan.org&sz=64
+      - name: Tables Generator
+        url: https://www.tablesgenerator.com
+        description: LaTeX 与 Markdown 表格生成器
+        icon: https://www.google.com/s2/favicons?domain=www.tablesgenerator.com&sz=64
+      - name: Mathpix Snip
+        url: https://www.mathpix.com
+        description: 公式与手写体 OCR 转 LaTeX
+        icon: https://www.google.com/s2/favicons?domain=www.mathpix.com&sz=64
+      - name: DeepL 翻译
+        url: https://www.deepl.com
+        description: 高质量学术文本翻译工具
+        icon: https://cdn.simpleicons.org/deepl
+      - name: Connected Papers
+        url: https://www.connectedpapers.com
+        description: 文献关系图谱与相似论文发现
+        icon: https://www.google.com/s2/favicons?domain=www.connectedpapers.com&sz=64
+      - name: Litmaps
+        url: https://www.litmaps.com
+        description: 引文网络可视化文献地图
+        icon: https://www.google.com/s2/favicons?domain=www.litmaps.com&sz=64
+      - name: OpenReview
+        url: https://openreview.net
+        description: 开放同行评审与会议论文平台
+        icon: https://www.google.com/s2/favicons?domain=openreview.net&sz=64
+      - name: Kaggle
+        url: https://www.kaggle.com
+        description: 数据科学竞赛与公开数据集
+        icon: https://cdn.simpleicons.org/kaggle
+      - name: Hugging Face
+        url: https://huggingface.co
+        description: 开源模型与数据集托管社区
+        icon: https://cdn.simpleicons.org/huggingface
+      - name: Papers with Code
+        url: https://paperswithcode.com
+        description: 论文与开源代码实现对照
+        icon: https://cdn.simpleicons.org/paperswithcode
+      - name: ModelScope 魔搭
+        url: https://modelscope.cn
+        description: 阿里开源模型与数据集社区
+        icon: https://www.google.com/s2/favicons?domain=modelscope.cn&sz=64
+      - name: OSF 开放科学框架
+        url: https://osf.io
+        description: 开放科研项目与数据托管平台
+        icon: https://cdn.simpleicons.org/osf
+      - name: Google Colab
+        url: https://colab.research.google.com
+        description: 免配置云端 Python 计算环境
+        icon: https://cdn.simpleicons.org/googlecolab
+      - name: Jupyter
+        url: https://jupyter.org
+        description: 交互式计算笔记本项目官网
+        icon: https://cdn.simpleicons.org/jupyter
+
+  - category: 工程计算与手册
+    icon: material/calculator-variant
+    items:
+      - name: Wolfram Alpha
+        url: https://www.wolframalpha.com
+        description: 计算知识引擎与公式求解
+        icon: https://cdn.simpleicons.org/wolfram
+      - name: MathWorks 中国
+        url: https://www.mathworks.com
+        description: MATLAB 与 Simulink 官方资源
+        icon: https://www.google.com/s2/favicons?domain=www.mathworks.com&sz=64
+      - name: COMSOL
+        url: https://www.comsol.com
+        description: 多物理场耦合仿真软件官网
+        icon: https://cdn.simpleicons.org/comsol
+      - name: Ansys
+        url: https://www.ansys.com
+        description: 有限元与工程仿真软件官网
+        icon: https://cdn.simpleicons.org/ansys
+      - name: Autodesk
+        url: https://www.autodesk.com
+        description: AutoCAD 等设计软件官方平台
+        icon: https://cdn.simpleicons.org/autodesk
+      - name: OriginLab
+        url: https://www.originlab.com
+        description: 科研绘图与数据分析软件官网
+        icon: https://www.google.com/s2/favicons?domain=www.originlab.com&sz=64
+      - name: Engineering ToolBox
+        url: https://www.engineeringtoolbox.com
+        description: 工程公式、材料参数与速查表
+        icon: https://www.google.com/s2/favicons?domain=www.engineeringtoolbox.com&sz=64
+      - name: eFunda
+        url: https://www.efunda.com
+        description: 机械与材料工程设计参考
+        icon: https://www.google.com/s2/favicons?domain=www.efunda.com&sz=64
+      - name: MatWeb
+        url: https://www.matweb.com
+        description: 材料力学与物理性能数据库
+        icon: https://www.google.com/s2/favicons?domain=www.matweb.com&sz=64
+      - name: TraceParts
+        url: https://www.traceparts.com
+        description: 标准件与零部件三维模型库
+        icon: https://www.google.com/s2/favicons?domain=www.traceparts.com&sz=64
+      - name: GeoGebra
+        url: https://www.geogebra.org
+        description: 交互式数学与几何可视化工具
+        icon: https://www.google.com/s2/favicons?domain=www.geogebra.org&sz=64
+      - name: Desmos
+        url: https://www.desmos.com
+        description: 在线函数图像与方程绘图
+        icon: https://www.google.com/s2/favicons?domain=www.desmos.com&sz=64
+      - name: SymPy
+        url: https://www.sympy.org
+        description: Python 符号计算与公式推导库
+        icon: https://cdn.simpleicons.org/sympy
+      - name: NumPy
+        url: https://numpy.org
+        description: Python 数值计算基础库
+        icon: https://cdn.simpleicons.org/numpy
+      - name: SciPy
+        url: https://scipy.org
+        description: 科学计算与信号处理算法库
+        icon: https://cdn.simpleicons.org/scipy
+      - name: UnitConverters
+        url: https://www.unitconverters.net
+        description: 各类工程单位在线换算
+        icon: https://www.google.com/s2/favicons?domain=www.unitconverters.net&sz=64
+      - name: RapidTables
+        url: https://www.rapidtables.com
+        description: 电子与数学速查表及换算工具
+        icon: https://www.google.com/s2/favicons?domain=www.rapidtables.com&sz=64
+      - name: Periodic Table
+        url: https://www.periodic-table.org
+        description: 元素周期表与物性数据速查
+        icon: https://www.google.com/s2/favicons?domain=www.periodic-table.org&sz=64
+      - name: All About Circuits
+        url: https://www.allaboutcircuits.com
+        description: 电路理论与电子学在线教程
+        icon: https://www.google.com/s2/favicons?domain=www.allaboutcircuits.com&sz=64
 
   - category: 编程与开发
     icon: material/code-tags
@@ -167,7 +741,7 @@ nav:
       - name: LeetCode
         url: https://leetcode.cn
         description: 编程题库与刷题平台
-        icon: https://api.iconify.design/devicon:leetcode.svg
+        icon: https://cdn.simpleicons.org/leetcode
       - name: freeCodeCamp
         url: https://www.freecodecamp.org/chinese/
         description: 免费学习编程的社区
@@ -204,7 +778,7 @@ nav:
       - name: CodePen
         url: https://codepen.io
         description: 在线前端代码编辑与展示平台
-        icon: https://api.iconify.design/logos:codepen-icon.svg
+        icon: images/icons/logos__codepen-icon.svg
       - name: Mizuki
         url: https://docs.mizuki.mysqil.com
         description: 一个简约 & 功能丰富的 Astro 博客主题
@@ -230,10 +804,14 @@ nav:
         url: https://www.cloudflare.com
         description: 全球领先的 CDN 与云服务商
         icon: https://cdn.simpleicons.org/cloudflare
+      - name: 华为云 ModelArts
+        url: https://www.huaweicloud.com/product/modelarts.html
+        description: 一站式 AI 开发与训练平台
+        icon: https://cdn.simpleicons.org/huawei
       - name: Github
         url: https://github.com
         description: 全球最大开源代码托管平台
-        icon: https://api.iconify.design/logos:github-icon.svg
+        icon: https://cdn.simpleicons.org/github
       - name: 阿里云
         url: https://www.aliyun.com
         description: 全球领先的云计算服务商
@@ -305,14 +883,14 @@ nav:
       - name: 微信开放平台
         url: https://open.weixin.qq.com
         description: 接入微信账号体系与能力
-        icon: https://api.iconify.design/logos:open-graph.svg
+        icon: https://cdn.simpleicons.org/facebook
       - name: 微信开放社区
         url: https://developers.weixin.qq.com/community/homepage
         description: 官方开发者问答与交流社区
       - name: 微信开发文档
         url: https://developers.weixin.qq.com/doc/
         description: 小程序、公众号开发官方文档
-        icon: https://api.iconify.design/material-icon-theme:folder-docs.svg
+        icon: https://cdn.simpleicons.org/readthedocs
       - name: 微信公众平台
         url: https://mp.weixin.qq.com
         description: 公众号与小程序管理后台
@@ -340,10 +918,7 @@ nav:
       - name: NotebookLM
         url: https://notebooklm.google.com/?pli=1
         description: 谷歌 AI 文档助手
-        icon: https://api.iconify.design/logos:google-icon.svg
-      - name: 中国版权登记平台
-        url: https://register.ccopyright.com.cn/registration.html#/index
-        description: 官方作品著作权登记
+        icon: https://cdn.simpleicons.org/google
 
   - category: 社交娱乐媒体
     icon: material/share-variant
@@ -355,7 +930,7 @@ nav:
       - name: Telegram
         url: https://web.telegram.org/a
         description: 即时通讯平台
-        icon: https://api.iconify.design/logos:telegram.svg
+        icon: https://cdn.simpleicons.org/telegram
       - name: Discord
         url: https://discord.com/channels/@me
         description: 游戏与开发者社区
@@ -363,7 +938,7 @@ nav:
       - name: YouTube
         url: https://www.youtube.com
         description: 全球视频分享平台
-        icon: https://api.iconify.design/logos:youtube-icon.svg
+        icon: https://cdn.simpleicons.org/youtube
       - name: 小红书
         url: https://www.xiaohongshu.com/explore
         description: 生活兴趣社区
@@ -392,9 +967,6 @@ nav:
       - name: 有道翻译
         url: https://fanyi.youdao.com/#/AITranslate
         description: 文本及网页在线翻译
-      - name: 网易云音乐解析
-        url: https://www.kanxizai.cn/163_music/
-        description: 高品质音乐下载工具
       - name: 鸠摩搜索
         url: https://www.jiumodiary.com
         description: 文档搜索引擎
@@ -408,7 +980,7 @@ nav:
       - name: 双拼练习
         url: https://api.ihint.me/shuang/
         description: 在线双拼输入法练习
-        icon: https://api.iconify.design/streamline-plump-color:keyboard.svg
+        icon: images/icons/streamline_plump_color__keyboard.svg
       - name: Typing Tom
         url: https://www.typingtom.com
         description: 免费在线盲打练习
@@ -417,10 +989,389 @@ nav:
         description: 稳定高速的网络加速
       - name: 一元机场
         url: https://cloud.xn--4gq62f52gdss.asia/#/login
+        icon: images/icons/mdi__vpn.svg
         description: 网络加速服务
       - name: 虚拟资料生成器
         url: https://www.usernamecopy.com
+        icon: images/icons/mdi__account-key.svg
         description: 测试用身份信息生成
+
+  - category: 语言与工具链
+    icon: material/language-python
+    items:
+      - name: Node.js
+        url: https://nodejs.org
+        description: JavaScript 服务端运行时官网
+        icon: https://cdn.simpleicons.org/nodedotjs
+      - name: Python
+        url: https://www.python.org
+        description: Python 语言官网与发行版下载
+        icon: https://cdn.simpleicons.org/python
+      - name: Python 官方文档
+        url: https://docs.python.org/3
+        description: Python 3 标准库与语言参考
+        icon: https://cdn.simpleicons.org/python
+      - name: Go
+        url: https://go.dev
+        description: Go 语言官网与工具链文档
+        icon: https://cdn.simpleicons.org/go
+      - name: Rust
+        url: https://www.rust-lang.org
+        description: Rust 语言官网与安装说明
+        icon: https://cdn.simpleicons.org/rust
+      - name: PHP
+        url: https://www.php.net
+        description: PHP 语言官网与函数手册
+        icon: https://cdn.simpleicons.org/php
+      - name: Ruby
+        url: https://www.ruby-lang.org
+        description: Ruby 语言官网与版本发布
+        icon: https://cdn.simpleicons.org/ruby
+      - name: Java
+        url: https://www.java.com
+        description: Java 运行时下载与官方文档
+      - name: OpenJDK
+        url: https://openjdk.org
+        description: 开源 JDK 项目与版本说明
+        icon: https://cdn.simpleicons.org/openjdk
+      - name: Kotlin
+        url: https://kotlinlang.org
+        description: Kotlin 语言官网与文档
+        icon: https://cdn.simpleicons.org/kotlin
+      - name: .NET
+        url: https://dotnet.microsoft.com
+        description: .NET 运行时与开发工具下载
+        icon: https://cdn.simpleicons.org/dotnet
+      - name: TypeScript
+        url: https://www.typescriptlang.org
+        description: TypeScript 官网与类型手册
+        icon: https://cdn.simpleicons.org/typescript
+      - name: R 语言
+        url: https://www.r-project.org
+        description: 统计计算与数据分析语言
+        icon: https://cdn.simpleicons.org/r
+      - name: Julia
+        url: https://julialang.org
+        description: 高性能科学计算语言
+      - name: GNU Octave
+        url: https://octave.org
+        description: 开源数值计算与 MATLAB 兼容环境
+        icon: https://cdn.simpleicons.org/octave
+      - name: Git
+        url: https://git-scm.com
+        description: 分布式版本控制官方文档
+        icon: https://cdn.simpleicons.org/git
+      - name: Git for Windows
+        url: https://gitforwindows.org
+        description: Windows 平台 Git 发行版
+        icon: https://cdn.simpleicons.org/git
+      - name: TortoiseGit
+        url: https://tortoisegit.org
+        description: Windows 资源管理器 Git 客户端
+        icon: https://cdn.simpleicons.org/git
+      - name: GitKraken
+        url: https://www.gitkraken.com
+        description: 跨平台图形化 Git 客户端
+        icon: https://cdn.simpleicons.org/gitkraken
+      - name: Sourcetree
+        url: https://www.sourcetreeapp.com
+        description: 免费 Git 与 Mercurial 客户端
+        icon: https://cdn.simpleicons.org/sourcetree
+      - name: GitHub
+        url: https://github.com
+        description: 全球最大代码托管与协作平台
+        icon: https://cdn.simpleicons.org/github
+      - name: GitHub Actions
+        url: https://github.com/features/actions
+        description: GitHub 持续集成与自动化流水线
+        icon: https://cdn.simpleicons.org/githubactions
+      - name: GitLab
+        url: https://about.gitlab.com
+        description: 一体化 DevOps 与代码托管平台
+        icon: https://cdn.simpleicons.org/gitlab
+      - name: Gitee 码云
+        url: https://gitee.com
+        description: 国内代码托管与协作平台
+        icon: https://cdn.simpleicons.org/gitee
+      - name: Jira
+        url: https://www.atlassian.com/software/jira
+        description: 敏捷项目与缺陷跟踪管理
+        icon: https://cdn.simpleicons.org/jirasoftware
+      - name: Visual Studio Code
+        url: https://code.visualstudio.com
+        description: 微软开源跨平台代码编辑器
+      - name: Visual Studio
+        url: https://visualstudio.microsoft.com
+        description: 微软集成开发环境
+      - name: VSCodium
+        url: https://vscodium.com
+        description: 移除遥测的 VS Code 开源构建
+        icon: https://cdn.simpleicons.org/vscodium
+      - name: JetBrains
+        url: https://www.jetbrains.com
+        description: IDEA、PyCharm 等 IDE 官方站
+        icon: https://cdn.simpleicons.org/jetbrains
+      - name: IntelliJ IDEA
+        url: https://www.jetbrains.com/idea
+        description: Java 与 Kotlin 旗舰 IDE
+        icon: https://cdn.simpleicons.org/intellijidea
+      - name: PyCharm
+        url: https://www.jetbrains.com/pycharm
+        description: Python 专业集成开发环境
+        icon: https://cdn.simpleicons.org/pycharm
+      - name: CLion
+        url: https://www.jetbrains.com/clion
+        description: C/C++ 跨平台 IDE
+        icon: https://cdn.simpleicons.org/clion
+      - name: GoLand
+        url: https://www.jetbrains.com/go
+        description: Go 语言专用 IDE
+        icon: https://cdn.simpleicons.org/goland
+      - name: Eclipse
+        url: https://www.eclipse.org
+        description: 老牌开源 Java IDE 与生态
+      - name: NetBeans
+        url: https://netbeans.apache.org
+        description: Apache 开源 Java IDE
+      - name: Notepad++
+        url: https://notepad-plus-plus.org
+        description: Windows 轻量文本与代码编辑器
+        icon: https://cdn.simpleicons.org/notepadplusplus
+      - name: Sublime Text
+        url: https://www.sublimetext.com
+        description: 轻快高效的商业代码编辑器
+      - name: Vim
+        url: https://www.vim.org
+        description: 终端下可高度定制的编辑器
+        icon: https://cdn.simpleicons.org/vim
+      - name: Neovim
+        url: https://neovim.io
+        description: Vim 的现代化重构版本
+        icon: https://cdn.simpleicons.org/neovim
+      - name: npm
+        url: https://docs.npmjs.com
+        description: Node.js 包管理器官方文档
+        icon: https://cdn.simpleicons.org/npm
+      - name: pnpm
+        url: https://pnpm.io
+        description: 节省磁盘空间的高效包管理器
+        icon: https://cdn.simpleicons.org/pnpm
+      - name: Yarn
+        url: https://yarnpkg.com
+        description: Facebook 推出的 JS 包管理器
+        icon: https://cdn.simpleicons.org/yarn
+      - name: Bun
+        url: https://bun.sh
+        description: 集运行时与打包器于一体的工具链
+        icon: https://cdn.simpleicons.org/bun
+      - name: Deno
+        url: https://deno.com
+        description: 安全优先的 TypeScript 运行时
+        icon: https://cdn.simpleicons.org/deno
+      - name: Maven
+        url: https://maven.apache.org
+        description: Java 项目构建与依赖管理
+        icon: https://cdn.simpleicons.org/apache
+      - name: Gradle
+        url: https://gradle.org
+        description: 灵活的 JVM 自动化构建工具
+        icon: https://cdn.simpleicons.org/gradle
+      - name: NuGet
+        url: https://www.nuget.org
+        description: .NET 包管理与发布平台
+        icon: https://cdn.simpleicons.org/nuget
+      - name: CMake
+        url: https://cmake.org
+        description: 跨平台 C/C++ 构建系统生成器
+        icon: https://cdn.simpleicons.org/cmake
+      - name: MSYS2
+        url: https://www.msys2.org
+        description: Windows 上的 GCC 与类 Unix 环境
+      - name: LLVM
+        url: https://llvm.org
+        description: 模块化编译器与工具链基础设施
+        icon: https://cdn.simpleicons.org/llvm
+      - name: GCC
+        url: https://gcc.gnu.org
+        description: GNU 编译器集合官方站
+        icon: https://cdn.simpleicons.org/gnu
+      - name: SQLite
+        url: https://www.sqlite.org
+        description: 轻量嵌入式关系型数据库
+        icon: https://cdn.simpleicons.org/sqlite
+      - name: MySQL
+        url: https://www.mysql.com
+        description: 全球流行的开源关系型数据库
+        icon: https://cdn.simpleicons.org/mysql
+      - name: MariaDB
+        url: https://mariadb.org
+        description: MySQL 的开源分支数据库
+        icon: https://cdn.simpleicons.org/mariadb
+      - name: PostgreSQL
+        url: https://www.postgresql.org
+        description: 功能强大的开源对象关系数据库
+        icon: https://cdn.simpleicons.org/postgresql
+      - name: MongoDB
+        url: https://www.mongodb.com
+        description: 文档型 NoSQL 数据库
+        icon: https://cdn.simpleicons.org/mongodb
+      - name: Redis
+        url: https://redis.io
+        description: 高性能内存键值数据库
+        icon: https://cdn.simpleicons.org/redis
+      - name: DBeaver
+        url: https://dbeaver.io
+        description: 通用数据库图形化管理工具
+        icon: https://cdn.simpleicons.org/dbeaver
+      - name: pgAdmin
+        url: https://www.pgadmin.org
+        description: PostgreSQL 官方管理客户端
+      - name: Nginx
+        url: https://nginx.org
+        description: 高性能 Web 服务器与反向代理
+        icon: https://cdn.simpleicons.org/nginx
+      - name: Apache HTTP Server
+        url: https://httpd.apache.org
+        description: Apache 基金会 Web 服务器
+        icon: https://cdn.simpleicons.org/apache
+      - name: Caddy
+        url: https://caddyserver.com
+        description: 自动 HTTPS 的现代 Web 服务器
+        icon: https://cdn.simpleicons.org/caddy
+      - name: Docker
+        url: https://www.docker.com
+        description: 容器化应用打包与运行平台
+        icon: https://cdn.simpleicons.org/docker
+      - name: Kubernetes
+        url: https://kubernetes.io
+        description: 容器编排与集群管理平台
+        icon: https://cdn.simpleicons.org/kubernetes
+      - name: Helm
+        url: https://helm.sh
+        description: Kubernetes 应用包管理器
+        icon: https://cdn.simpleicons.org/helm
+
+  - category: 开发辅助与调试
+    icon: material/bug
+    items:
+      - name: MDN Web Docs
+        url: https://developer.mozilla.org
+        description: Web 前端权威技术文档
+        icon: https://cdn.simpleicons.org/mdnwebdocs
+      - name: DevDocs
+        url: https://devdocs.io
+        description: 多语言 API 文档聚合查询
+      - name: Can I use
+        url: https://caniuse.com
+        description: 浏览器特性兼容性查询
+      - name: Swagger
+        url: https://swagger.io
+        description: OpenAPI 接口设计与文档工具
+        icon: https://cdn.simpleicons.org/swagger
+      - name: Apifox
+        url: https://www.apifox.cn
+        description: 接口设计、调试与 Mock 一体工具
+      - name: Postman
+        url: https://www.postman.com
+        description: API 调试与自动化测试平台
+        icon: https://cdn.simpleicons.org/postman
+      - name: Hoppscotch
+        url: https://hoppscotch.io
+        description: 开源在线 API 请求调试工具
+        icon: https://cdn.simpleicons.org/hoppscotch
+      - name: Insomnia
+        url: https://insomnia.rest
+        description: 开源 REST 与 GraphQL 客户端
+        icon: https://cdn.simpleicons.org/insomnia
+      - name: Apache JMeter
+        url: https://jmeter.apache.org
+        description: 开源性能与压力测试工具
+        icon: https://cdn.simpleicons.org/apachejmeter
+      - name: Wireshark
+        url: https://www.wireshark.org
+        description: 网络协议抓包与分析工具
+        icon: https://cdn.simpleicons.org/wireshark
+      - name: curl
+        url: https://curl.se
+        description: 命令行数据传输与接口调试工具
+        icon: https://cdn.simpleicons.org/curl
+      - name: jq
+        url: https://jqlang.org
+        description: 命令行 JSON 处理利器
+      - name: OpenSSL
+        url: https://www.openssl.org
+        description: 加密库与证书命令行工具
+        icon: https://cdn.simpleicons.org/openssl
+      - name: Valgrind
+        url: https://valgrind.org
+        description: Linux 内存泄漏与性能分析工具
+      - name: Windows Terminal
+        url: https://github.com/microsoft/terminal
+        description: 微软现代多标签终端
+        icon: https://cdn.simpleicons.org/github
+      - name: PowerShell
+        url: https://learn.microsoft.com/powershell
+        description: 跨平台自动化脚本与命令行
+      - name: Oh My Zsh
+        url: https://ohmyz.sh
+        description: Zsh 终端配置管理框架
+        icon: https://cdn.simpleicons.org/gnubash
+      - name: WSL
+        url: https://learn.microsoft.com/windows/wsl
+        description: Windows 上的 Linux 子系统
+        icon: https://cdn.simpleicons.org/linux
+      - name: VirtualBox
+        url: https://www.virtualbox.org
+        description: 开源虚拟机与虚拟化平台
+        icon: https://cdn.simpleicons.org/virtualbox
+      - name: VMware
+        url: https://www.vmware.com
+        description: 商业虚拟化与云基础设施
+        icon: https://cdn.simpleicons.org/vmware
+      - name: QEMU
+        url: https://www.qemu.org
+        description: 开源机器模拟与虚拟化工具
+        icon: https://cdn.simpleicons.org/qemu
+      - name: Jenkins
+        url: https://www.jenkins.io
+        description: 开源持续集成与交付服务器
+        icon: https://cdn.simpleicons.org/jenkins
+      - name: Grafana
+        url: https://grafana.com
+        description: 指标可视化与监控看板
+        icon: https://cdn.simpleicons.org/grafana
+      - name: Prometheus
+        url: https://prometheus.io
+        description: 云原生监控与告警系统
+        icon: https://cdn.simpleicons.org/prometheus
+      - name: Elastic
+        url: https://www.elastic.co
+        description: 搜索引擎与日志分析技术栈
+        icon: https://cdn.simpleicons.org/elasticsearch
+      - name: Blender
+        url: https://www.blender.org
+        description: 开源三维建模与渲染套件
+        icon: https://cdn.simpleicons.org/blender
+      - name: Godot
+        url: https://godotengine.org
+        description: 开源跨平台游戏引擎
+        icon: https://cdn.simpleicons.org/godotengine
+      - name: Unity
+        url: https://unity.com
+        description: 跨平台游戏与实时三维引擎
+        icon: https://cdn.simpleicons.org/unity
+      - name: Unreal Engine
+        url: https://www.unrealengine.com
+        description: 虚幻引擎与实时渲染技术
+        icon: https://cdn.simpleicons.org/unrealengine
+      - name: Android Developers
+        url: https://developer.android.com
+        description: 安卓开发官方文档与工具
+        icon: https://cdn.simpleicons.org/android
+      - name: Apple Developer
+        url: https://developer.apple.com
+        description: iOS 与 macOS 开发官方资源
+        icon: https://cdn.simpleicons.org/apple
 
   - category: 自部署站点群
     icon: material/server
@@ -432,28 +1383,24 @@ nav:
       - name: 博客站点流量监控
         url: https://eocount.9420000.xyz
         description: 博客站点访问量数据监控
-        icon: https://api.iconify.design/glyphs-poly:chart-line.svg
-      - name: Luwei's Note Book
-        url: https://note.sufine.top
-        description: Luwei 的个人知识笔记库
-        icon: https://api.iconify.design/noto-v1:notebook.svg
+        icon: https://cdn.simpleicons.org/chartdotjs
       - name: Mazanoke
         url: https://pix.sufine.top
         description: 在线图片压缩与转换工具
-        icon: https://api.iconify.design/flat-color-icons:edit-image.svg
+        icon: images/icons/flat_color_icons__edit-image.svg
       - name: 单词学习网站
         url: https://word.sufine.top
         description: 英语单词记忆与测试
-        icon: https://api.iconify.design/material-symbols:match-word-rounded.svg?color=%232B579A
+        icon: https://cdn.simpleicons.org/quizlet
       - name: 交叉口信号参数计算器
         url: https://sign.sufine.top
         description: 交叉口交通信号参数在线计算
-        icon: https://api.iconify.design/noto-v1:horizontal-traffic-light.svg
+        icon: images/icons/noto_v1__horizontal-traffic-light.svg
       - name: Sufine TV 影视站
         url: https://tv.sufine.top
         description: 基于 MoonTV 的资源聚合平台
-        icon: https://api.iconify.design/streamline-stickies-color:smart-tv.svg
+        icon: https://cdn.simpleicons.org/appletv
       - name: Kira AI Chat
         url: https://ai.sufine.top
         description: 基于硅基流动的 AI 对话平台
-        icon: https://api.iconify.design/streamline-flex-color:cat-2.svg
+        icon: https://cdn.simpleicons.org/anthropic

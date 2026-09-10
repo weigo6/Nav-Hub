@@ -16,7 +16,8 @@ extra_css:
 extra_javascript:
   - javascripts/marked.min.js # 用于 Markdown 渲染
   - javascripts/ask_ai.js # 自定义的 Ask AI 功能脚本
-  - javascripts/APlayer.min.js # Aplayer 脚本
+  # APlayer.min.js 是本仓库的精简副本（已移除内置 smoothscroll 对页内锚点的接管）
+  - javascripts/APlayer.min.js # Aplayer 脚本（本地精简副本）
   - javascripts/Meting.min.js # MetingJS 脚本
   - javascripts/music_player.js # 音乐播放器脚本
   - javascripts/extra.js # 其他自定义脚本
