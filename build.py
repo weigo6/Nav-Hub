@@ -26,6 +26,7 @@ _fallback_icon_cache = {}
 _fallback_icon_cache_lock = threading.Lock()
 _dead_link_cache = {}
 _dead_link_cache_lock = threading.Lock()
+_icon_validation_skip_hosts = set()
 
 # Report options accepted in nav_data.yml under config. Each maps to whether the
 # corresponding section of the health report is included.
@@ -61,6 +62,35 @@ def _get_default_headers():
     return {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
+
+
+def _normalize_icon_skip_host(value):
+    if value is None:
+        return None
+
+    raw = str(value).strip().lower()
+    if not raw:
+        return None
+
+    candidate = raw if '://' in raw else f'https://{raw}'
+    parsed = urlparse(candidate)
+    host = (parsed.hostname or parsed.path or '').strip().lower().strip('.')
+    return host or None
+
+
+def _should_skip_icon_validation(url):
+    if not _icon_validation_skip_hosts:
+        return False
+
+    try:
+        host = (urlparse(url).hostname or '').strip().lower().strip('.')
+    except ValueError:
+        return False
+
+    if not host:
+        return False
+
+    return any(host == skip_host or host.endswith(f'.{skip_host}') for skip_host in _icon_validation_skip_hosts)
 
 # CSS styles
 CUSTOM_CSS = """
@@ -547,9 +577,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ICON_JS = """
 <script>
-function handleImageError(img) {
+function replaceWithCloudPlaceholder(img) {
     const cloudSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="#9e9e9e"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>';
+    img.onerror = null;
+    img.onload = null;
+    if (img.parentNode) {
+        img.parentNode.innerHTML = cloudSvg;
+    }
+}
     
+function handleImageLoad(img) {
+    // Yandex may answer with a 1x1 transparent PNG placeholder instead of a
+    // network error. That image loads successfully, so onerror never fires.
+    // Detect it on load and swap to the final inline SVG placeholder.
+    if (
+        img.src.includes('favicon.yandex.net/favicon/') &&
+        img.naturalWidth <= 1 &&
+        img.naturalHeight <= 1
+    ) {
+        replaceWithCloudPlaceholder(img);
+    }
+}
+
+function handleImageError(img) {
     // Get current fallback level (default 0)
     let level = parseInt(img.getAttribute('data-fallback-level') || '0');
     
@@ -567,8 +617,7 @@ function handleImageError(img) {
 
     // If we can't find a hostname, give up immediately
     if (!hostname) {
-        img.onerror = null;
-        if (img.parentNode) img.parentNode.innerHTML = cloudSvg;
+        replaceWithCloudPlaceholder(img);
         return;
     }
 
@@ -587,10 +636,7 @@ function handleImageError(img) {
         img.src = 'https://favicon.yandex.net/favicon/' + hostname + '?size=32';
     } else {
         // Level 2+ -> Give up, show SVG
-        img.onerror = null;
-        if (img.parentNode) {
-            img.parentNode.innerHTML = cloudSvg;
-        }
+        replaceWithCloudPlaceholder(img);
     }
 }
 </script>
@@ -668,6 +714,12 @@ def validate_icon(url, headers, session=None):
     """
     if not url:
         return None
+
+    if _should_skip_icon_validation(url):
+        with _validate_icon_cache_lock:
+            _validate_icon_cache[url] = url
+        print(f"  {Colors.OKBLUE}[BYPASS]{Colors.ENDC} Skip icon validation for configured host: {url}")
+        return url
 
     with _validate_icon_cache_lock:
         if url in _validate_icon_cache:
@@ -1293,6 +1345,8 @@ def report_health(nav_items, results_by_category, workers, options=None):
 
 
 def generate_nav():
+    global _icon_validation_skip_hosts
+
     with open('nav_data.yml', 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
 
@@ -1314,6 +1368,17 @@ def generate_nav():
     else:
         print(f"{Colors.FAIL}Error: Invalid nav_data.yml format.{Colors.ENDC}")
         return
+
+    skip_hosts = config.get('icon_validation_skip_hosts', []) if isinstance(config, dict) else []
+    if isinstance(skip_hosts, str):
+        skip_hosts = [skip_hosts]
+    elif not isinstance(skip_hosts, list):
+        skip_hosts = []
+    _icon_validation_skip_hosts = {
+        normalized
+        for normalized in (_normalize_icon_skip_host(value) for value in skip_hosts)
+        if normalized
+    }
 
     content = []
     
@@ -1426,7 +1491,7 @@ def generate_nav():
             if icon:
                 # Add no-referrer if it's a remote URL to prevent tracking/hotlinking blocking
                 referrer_policy = ' referrerpolicy="no-referrer"' if icon.startswith('http') else ''
-                img_attrs = f'src="{icon}" alt="{name}" loading="lazy" decoding="async" onerror="handleImageError(this)"{referrer_policy}'
+                img_attrs = f'src="{icon}" alt="{name}" loading="lazy" decoding="async" onload="handleImageLoad(this)" onerror="handleImageError(this)"{referrer_policy}'
                 icon_html = f'<img {img_attrs}>'
             else:
                  icon_html = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="#9e9e9e"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>'

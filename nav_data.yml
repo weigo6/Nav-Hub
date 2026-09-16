@@ -1,5 +1,7 @@
 config:
   filename: index.md
+  icon_validation_skip_hosts:
+    - cdn.simpleicons.org
   meta:
     title: 站域文路指引
     description: 一方数字栖居，聚万象为舟楫，渡日常于须臾。

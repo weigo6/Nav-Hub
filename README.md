@@ -286,6 +286,17 @@ icon: https://cdn.simpleicons.org/github
     - 若验证失败（如 `404` 或非图片），构建日志将输出警告（`Warning: Remote icon validation failed...`），但**不会**自动替换为您配置的链接，以便您排查问题。
 - **本地路径**：检查 `docs/` 目录下是否存在对应文件。若文件缺失，将输出警告。
 
+如果某些远程图标源在您的 CI 环境中不可达、但在用户浏览器侧可以正常访问，可在 `config` 中配置跳过校验的域名：
+
+```yaml
+config:
+  icon_validation_skip_hosts:
+    - cdn.simpleicons.org
+```
+
+- 支持填写完整主机名（如 `cdn.simpleicons.org`）或父域名（如 `simpleicons.org`，会匹配其子域名）。
+- 命中该列表的远程图标链接在构建期会直接保留，不再发起可用性检查，适合 GitHub Actions 等受限网络环境。
+
 > **注意**：请确保本地图标文件确实位于 `docs` 目录下，否则 MkDocs 构建时无法将其包含在最终站点中。
 
 ## ASK AI 问答助手部署
