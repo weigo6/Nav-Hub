@@ -155,6 +155,10 @@ nav:
       - name: OpenCode
         url: https://opencode.ai
         description: 开源终端 AI 编码智能体
+      - name: agent-qa
+        url: https://vostride.com
+        description: 自然语言测试，memidex 持久记忆与经验证的自我改进
+        icon: https://vostride.com/icon.png
       - name: v0
         url: https://v0.dev
         description: Vercel AI 界面与前端代码生成
